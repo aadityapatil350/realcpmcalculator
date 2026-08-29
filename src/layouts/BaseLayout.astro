@@ -51,8 +51,20 @@ const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
     <script type="application/ld+json" set:html={JSON.stringify(s)} />
   ))}
 
-  <!-- Favicon -->
+  <!-- Open Graph image dimensions hint -->
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:site_name" content="RealCPMCalculator.com" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Favicon + icons -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="robots" content="index, follow" />
 
   <!-- Google Analytics — commented out until tracking ID is set
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
