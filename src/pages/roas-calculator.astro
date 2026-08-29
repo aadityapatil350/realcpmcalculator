@@ -1,0 +1,419 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/roas-calculator';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ROAS Calculator",
+  "url": pageUrl,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  {
+    q: "How do you calculate ROAS?",
+    a: "ROAS = Revenue ÷ Ad Spend. If you generated $20,000 in revenue from a $5,000 campaign, your ROAS is 4 (or 4×). This calculator solves in any direction: enter revenue and spend to get ROAS, or enter ROAS and spend to find revenue, or enter revenue and ROAS to find required spend."
+  },
+  {
+    q: "What is break-even ROAS?",
+    a: "Break-even ROAS is the minimum return on ad spend needed to cover your costs. It equals 1 ÷ Gross Margin. With a 40% gross margin, your break-even ROAS is 2.5×. At exactly 2.5× ROAS, every dollar in ad spend is repaid in gross profit — you're not losing money, but you're not making it either. A profitable campaign needs ROAS above the break-even threshold."
+  },
+  {
+    q: "What is a good ROAS?",
+    a: `ROAS benchmarks vary significantly by channel and business model. General industry averages (2024):
+    <table class="mt-3 w-full text-sm border-collapse">
+      <thead><tr class="bg-[var(--color-bg-subtle)]"><th class="text-left p-2 border border-[var(--color-border)]">Channel</th><th class="text-right p-2 border border-[var(--color-border)]">Avg. ROAS</th></tr></thead>
+      <tbody>
+        <tr><td class="p-2 border border-[var(--color-border)]">Google Search (e-commerce)</td><td class="text-right p-2 border border-[var(--color-border)]">4–8×</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">Google Shopping</td><td class="text-right p-2 border border-[var(--color-border)]">5–12×</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">Meta Ads (Facebook/Instagram)</td><td class="text-right p-2 border border-[var(--color-border)]">3–6×</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">TikTok Ads</td><td class="text-right p-2 border border-[var(--color-border)]">2–4×</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">Amazon Sponsored Products</td><td class="text-right p-2 border border-[var(--color-border)]">3–10×</td></tr>
+      </tbody>
+    </table>
+    <p class="mt-2 text-xs text-[var(--color-text-subtle)]">Sources: Google Ads e-commerce benchmarks; Meta Ads industry reports (2024); Amazon Advertising. Updated August 2026. A ROAS below your break-even threshold means the campaign is unprofitable regardless of these benchmarks.</p>`
+  },
+  {
+    q: "ROAS vs ROI — what's the difference?",
+    a: "ROAS measures revenue relative to ad spend only: Revenue ÷ Ad Spend. ROI measures net profit relative to total investment: (Revenue − Total Costs) ÷ Total Costs × 100%. ROAS ignores cost of goods, overhead, and non-ad costs, so a 5× ROAS campaign could still be unprofitable if margins are thin. Use ROAS for campaign-level optimization and ROI for business-level profitability."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a.replace(/<[^>]+>/g, '') }
+  }))
+};
+---
+<BaseLayout
+  title="ROAS Calculator – Return on Ad Spend & Break-Even ROAS"
+  description="Free ROAS calculator — solve revenue, ad spend, or ROAS in any direction. Includes break-even ROAS mode: enter gross margin to find the minimum return needed."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/roas-calculator" />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">ROAS Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      Calculate return on ad spend in any direction. Switch to Break-Even ROAS mode to find the minimum ROAS your campaigns need to cover costs.
+    </p>
+
+    <!-- Mode tabs -->
+    <div class="flex gap-2 mb-6" role="tablist" aria-label="Calculator mode">
+      <button
+        id="tab-roas"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-roas"
+        class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+        style="min-height:44px"
+      >
+        ROAS Calculator
+      </button>
+      <button
+        id="tab-breakeven"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-breakeven"
+        class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+        style="min-height:44px"
+      >
+        Break-Even ROAS
+      </button>
+    </div>
+
+    <!-- ROAS panel -->
+    <div id="panel-roas" role="tabpanel" aria-labelledby="tab-roas" class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+
+      <div class="flex items-center gap-3 mb-6">
+        <label for="currency-roas" class="text-sm font-medium text-[var(--color-text-muted)] whitespace-nowrap">Currency:</label>
+        <select id="currency-roas" class="w-36">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CAD">CAD (C$)</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label for="revenue" class="block text-sm font-medium text-[var(--color-text)] mb-1">Revenue</label>
+          <input type="number" id="revenue" inputmode="decimal" min="0" step="any" placeholder="e.g. 20000" value="20000" aria-describedby="revenue-error" />
+          <p id="revenue-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="roas-spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">Ad Spend</label>
+          <input type="number" id="roas-spend" inputmode="decimal" min="0" step="any" placeholder="e.g. 5000" value="5000" aria-describedby="roas-spend-error" />
+          <p id="roas-spend-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="roas" class="block text-sm font-medium text-[var(--color-text)] mb-1">ROAS</label>
+          <input type="number" id="roas" inputmode="decimal" min="0" step="any" placeholder="calculated" aria-describedby="roas-error" />
+          <p id="roas-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+      </div>
+
+      <div id="roas-results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-[var(--color-text)]">ROAS</span>
+          <span id="result-roas" class="text-2xl font-bold text-[var(--color-accent)]">4.00×</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Revenue</span>
+          <span id="result-revenue" class="text-sm font-medium text-[var(--color-text)]">—</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Ad Spend</span>
+          <span id="result-roas-spend" class="text-sm font-medium text-[var(--color-text)]">—</span>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="roas-formula"></p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="copy-roas-result" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy Result</button>
+        <button id="copy-roas-link" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy link to this calculation</button>
+      </div>
+    </div>
+
+    <!-- Break-even panel -->
+    <div id="panel-breakeven" role="tabpanel" aria-labelledby="tab-breakeven" class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm hidden">
+      <p class="text-sm text-[var(--color-text-muted)] mb-6">
+        Enter your gross margin percentage. The break-even ROAS is the minimum return your campaigns must achieve to cover cost of goods.
+      </p>
+      <div class="max-w-xs">
+        <label for="gross-margin" class="block text-sm font-medium text-[var(--color-text)] mb-1">
+          Gross Margin (%)
+        </label>
+        <input type="number" id="gross-margin" inputmode="decimal" min="1" max="99" step="any" placeholder="e.g. 40" value="40" aria-describedby="margin-error" />
+        <p id="margin-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+      </div>
+
+      <div id="breakeven-results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 mt-6 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-[var(--color-text)]">Break-Even ROAS</span>
+          <span id="result-breakeven" class="text-2xl font-bold text-[var(--color-accent)]">2.50×</span>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="breakeven-formula">Break-even ROAS = 1 ÷ 0.40 = 2.50×</p>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3 text-sm text-[var(--color-text-muted)]">
+          <p id="breakeven-interpretation"></p>
+        </div>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">How to Use This ROAS Calculator</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Fill in any two of <strong>Revenue</strong>, <strong>Ad Spend</strong>, and <strong>ROAS</strong>. The third field calculates instantly. No submit button needed.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Example — measuring performance:</strong> You spent $5,000 and generated $20,000 in revenue. Enter revenue = $20,000 and spend = $5,000. ROAS = 4.00×.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Example — planning a budget:</strong> You need a 5× ROAS and expect $50,000 in revenue. Enter revenue = $50,000 and ROAS = 5. Required spend = $10,000.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Switch to <strong>Break-Even ROAS</strong> mode to find the minimum ROAS threshold for your gross margin. This is the number your campaigns must beat to be profitable.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">The ROAS Formula Explained</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          ROAS = Revenue ÷ Ad Spend
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          <strong>Revenue</strong> — the total attributed revenue from the campaign. Use revenue that the platform attributed to those ads, not total business revenue.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-2">
+          <strong>Ad Spend</strong> — actual billed spend for the period, not budget. Include all ad costs but not agency fees (unless comparing to an all-in cost scenario).
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-2">
+          <strong>ROAS</strong> — expressed as a multiplier. A ROAS of 4 means every dollar spent returned four dollars in revenue. It is not a percentage.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Break-Even ROAS — What Is It and How to Calculate It</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          Break-Even ROAS = 1 ÷ Gross Margin (as a decimal)
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Gross margin is revenue minus cost of goods sold, expressed as a decimal. A product that sells for $100 with a $60 COGS has a 40% gross margin (0.40).
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Break-even ROAS at 40% margin = 1 ÷ 0.40 = <strong>2.50×</strong>. This means the campaign must return $2.50 for every $1 spent just to cover product costs. Any ROAS below 2.5× is a loss.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Both "break even ROAS" and "breakeven ROAS" refer to the same calculation — the terminology varies by platform and organization.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">What Is a Good ROAS? Benchmarks by Channel</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          A good ROAS is one that exceeds your break-even threshold with enough headroom to cover overhead and generate profit. These cross-industry averages are a starting point only.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Channel</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Avg. ROAS (e-commerce)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)]">Google Search</td><td class="text-right p-3 border border-[var(--color-border)]">4–8×</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Google Shopping</td><td class="text-right p-3 border border-[var(--color-border)]">5–12×</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Meta Ads (Facebook/Instagram)</td><td class="text-right p-3 border border-[var(--color-border)]">3–6×</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">TikTok Ads</td><td class="text-right p-3 border border-[var(--color-border)]">2–4×</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Amazon Sponsored Products</td><td class="text-right p-3 border border-[var(--color-border)]">3–10×</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">YouTube Ads</td><td class="text-right p-3 border border-[var(--color-border)]">2–5×</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: Google Ads e-commerce benchmarks; Meta Ads industry reports; Amazon Advertising; YouTube for Business. Updated August 2026.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Common ROAS Mistakes</h2>
+        <ul class="space-y-3 text-[var(--color-text-muted)]">
+          <li><strong>Using gross revenue instead of net revenue in attribution.</strong> If returns and refunds are not subtracted, ROAS looks better than reality.</li>
+          <li><strong>Confusing ROAS with ROI.</strong> A 4× ROAS does not mean a 400% ROI. ROI accounts for all costs; ROAS only measures spend vs. revenue.</li>
+          <li><strong>Not knowing your break-even ROAS.</strong> A 3× ROAS looks strong until you realize your gross margin requires 4× to break even.</li>
+          <li><strong>Mixing attribution windows.</strong> A 7-day click attribution ROAS is not comparable to a 28-day view-through ROAS. Always match windows when benchmarking.</li>
+          <li><strong>Ignoring blended ROAS.</strong> Individual campaigns may vary widely; look at total account ROAS to judge overall efficiency.</li>
+        </ul>
+      </section>
+
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/roas-calculator" />
+
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+(function() {
+  const currencies = {
+    USD: { locale: 'en-US', currency: 'USD' },
+    EUR: { locale: 'de-DE', currency: 'EUR' },
+    GBP: { locale: 'en-GB', currency: 'GBP' },
+    INR: { locale: 'en-IN', currency: 'INR' },
+    AUD: { locale: 'en-AU', currency: 'AUD' },
+    CAD: { locale: 'en-CA', currency: 'CAD' },
+  };
+
+  function fmt(value, currKey, decimals = 2) {
+    const c = currencies[currKey] || currencies.USD;
+    return new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
+  }
+
+  // Tab switching
+  const tabRoas = document.getElementById('tab-roas');
+  const tabBe = document.getElementById('tab-breakeven');
+  const panelRoas = document.getElementById('panel-roas');
+  const panelBe = document.getElementById('panel-breakeven');
+
+  function activateTab(tab) {
+    const isRoas = tab === 'roas';
+    tabRoas.setAttribute('aria-selected', String(isRoas));
+    tabBe.setAttribute('aria-selected', String(!isRoas));
+    tabRoas.className = `px-4 py-2 rounded-md text-sm font-medium transition-colors ${isRoas ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`;
+    tabBe.className = `px-4 py-2 rounded-md text-sm font-medium transition-colors ${!isRoas ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text)]'}`;
+    panelRoas.classList.toggle('hidden', !isRoas);
+    panelBe.classList.toggle('hidden', isRoas);
+  }
+  activateTab('roas');
+  tabRoas.addEventListener('click', () => activateTab('roas'));
+  tabBe.addEventListener('click', () => activateTab('breakeven'));
+
+  // ROAS calculator
+  const revenueEl = document.getElementById('revenue');
+  const spendEl = document.getElementById('roas-spend');
+  const roasEl = document.getElementById('roas');
+  const currencyEl = document.getElementById('currency-roas');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('revenue')) revenueEl.value = params.get('revenue');
+  if (params.has('spend')) spendEl.value = params.get('spend');
+  if (params.has('roas')) roasEl.value = params.get('roas');
+  if (params.has('mode') && params.get('mode') === 'breakeven') activateTab('breakeven');
+
+  function clearErr(el, errEl) { el.classList.remove('error'); errEl.classList.add('hidden'); errEl.textContent = ''; }
+  function showErr(el, errEl, msg) { el.classList.add('error'); errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function getVal(el) { const v = el.value.trim(); if (v === '') return null; const n = parseFloat(v); return isNaN(n) ? NaN : n; }
+
+  function recalcRoas() {
+    const curr = currencyEl.value;
+    const revErr = document.getElementById('revenue-error');
+    const spErr = document.getElementById('roas-spend-error');
+    const roasErr = document.getElementById('roas-error');
+    clearErr(revenueEl, revErr); clearErr(spendEl, spErr); clearErr(roasEl, roasErr);
+
+    const rev = getVal(revenueEl);
+    const sp = getVal(spendEl);
+    const ro = getVal(roasEl);
+
+    let valid = true;
+    if (rev !== null) { if (isNaN(rev)) { showErr(revenueEl, revErr, 'Must be a valid number.'); valid = false; } else if (rev < 0) { showErr(revenueEl, revErr, 'Revenue cannot be negative.'); valid = false; } }
+    if (sp !== null) { if (isNaN(sp)) { showErr(spendEl, spErr, 'Must be a valid number.'); valid = false; } else if (sp < 0) { showErr(spendEl, spErr, 'Spend cannot be negative.'); valid = false; } }
+    if (ro !== null) { if (isNaN(ro)) { showErr(roasEl, roasErr, 'Must be a valid number.'); valid = false; } else if (ro < 0) { showErr(roasEl, roasErr, 'ROAS cannot be negative.'); valid = false; } }
+    if (!valid) return;
+
+    const filled = [rev, sp, ro].filter(v => v !== null);
+    if (filled.length < 2) { document.getElementById('result-roas').textContent = '—'; document.getElementById('result-revenue').textContent = '—'; document.getElementById('result-roas-spend').textContent = '—'; document.getElementById('roas-formula').textContent = ''; return; }
+
+    let roasVal, revVal, spVal, formula;
+    if (rev !== null && sp !== null) {
+      if (sp === 0) { showErr(spendEl, spErr, 'Spend must be greater than zero.'); return; }
+      roasVal = rev / sp; revVal = rev; spVal = sp;
+      formula = `ROAS = ${fmt(rev, curr)} ÷ ${fmt(sp, curr)} = ${roasVal.toFixed(2)}×`;
+    } else if (rev !== null && ro !== null) {
+      if (ro === 0) { showErr(roasEl, roasErr, 'ROAS must be greater than zero.'); return; }
+      spVal = rev / ro; revVal = rev; roasVal = ro;
+      formula = `Spend = ${fmt(rev, curr)} ÷ ${ro.toFixed(2)} = ${fmt(spVal, curr)}`;
+    } else if (sp !== null && ro !== null) {
+      revVal = sp * ro; spVal = sp; roasVal = ro;
+      formula = `Revenue = ${fmt(sp, curr)} × ${ro.toFixed(2)} = ${fmt(revVal, curr)}`;
+    }
+
+    document.getElementById('result-roas').textContent = roasVal.toFixed(2) + '×';
+    document.getElementById('result-revenue').textContent = fmt(revVal, curr);
+    document.getElementById('result-roas-spend').textContent = fmt(spVal, curr);
+    document.getElementById('roas-formula').textContent = formula;
+
+    const p = new URLSearchParams();
+    if (revenueEl.value) p.set('revenue', revenueEl.value);
+    if (spendEl.value) p.set('spend', spendEl.value);
+    if (roasEl.value) p.set('roas', roasEl.value);
+    p.set('currency', curr);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  [revenueEl, spendEl, roasEl, currencyEl].forEach(el => el.addEventListener('input', recalcRoas));
+
+  // Break-even calculator
+  const marginEl = document.getElementById('gross-margin');
+
+  function recalcBreakEven() {
+    const marginErr = document.getElementById('margin-error');
+    clearErr(marginEl, marginErr);
+    const m = parseFloat(marginEl.value);
+    if (isNaN(m) || m <= 0 || m >= 100) {
+      showErr(marginEl, marginErr, 'Enter a margin between 1% and 99%.');
+      document.getElementById('result-breakeven').textContent = '—';
+      document.getElementById('breakeven-formula').textContent = '';
+      document.getElementById('breakeven-interpretation').textContent = '';
+      return;
+    }
+    const mDec = m / 100;
+    const be = 1 / mDec;
+    document.getElementById('result-breakeven').textContent = be.toFixed(2) + '×';
+    document.getElementById('breakeven-formula').textContent = `Break-even ROAS = 1 ÷ ${mDec.toFixed(2)} = ${be.toFixed(2)}×`;
+    document.getElementById('breakeven-interpretation').textContent = `At ${m}% gross margin, campaigns must return at least ${be.toFixed(2)}× ROAS to cover cost of goods. Any campaign below this threshold is losing money on product costs alone.`;
+  }
+
+  marginEl.addEventListener('input', recalcBreakEven);
+
+  // Copy buttons
+  document.getElementById('copy-roas-result').addEventListener('click', function() {
+    const text = `ROAS: ${document.getElementById('result-roas').textContent} | Revenue: ${document.getElementById('result-revenue').textContent} | Spend: ${document.getElementById('result-roas-spend').textContent}`;
+    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
+  });
+  document.getElementById('copy-roas-link').addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
+  });
+
+  recalcRoas();
+  recalcBreakEven();
+})();
+</script>

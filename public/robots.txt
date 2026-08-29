@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://realcpmcalculator.com/sitemap-index.xml

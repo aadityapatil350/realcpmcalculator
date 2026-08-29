@@ -1,0 +1,290 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/pto-accrual-calculator';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PTO Accrual Calculator",
+  "url": pageUrl,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  {
+    q: "How do I calculate PTO accrual per pay period?",
+    a: "PTO per pay period = Annual PTO Days ÷ Pay Periods per Year. For bi-weekly pay (26 periods), 15 days ÷ 26 = 0.577 days per period. For semi-monthly pay (24 periods), 15 days ÷ 24 = 0.625 days per period."
+  },
+  {
+    q: "How does hourly PTO accrual work?",
+    a: "Hourly accrual = (Annual PTO Days × 8 hours) ÷ Annual Hours Worked. An employee with 15 PTO days working 2,080 hours annually (40 hrs/week × 52 weeks) accrues 0.0577 hours of PTO per hour worked, or about 1 hour of PTO for every 17.3 hours worked."
+  },
+  {
+    q: "Do PTO entitlement rules vary by state?",
+    a: "Yes. PTO and vacation accrual rules vary significantly by US state. California, for example, prohibits 'use it or lose it' PTO policies and requires accrued PTO to be paid out upon termination. Maine, Colorado, and several other states have mandatory paid leave laws. This calculator provides estimates only — consult your HR department or a qualified employment attorney for guidance on your specific jurisdiction and employer policy."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+<BaseLayout
+  title="PTO Accrual Calculator – Per Pay Period, Hourly, or Annual"
+  description="Free PTO accrual calculator — calculate paid time off accrual per pay period, per hour worked, or annual lump sum. No legal advice. Rules vary by state and employer."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">PTO Accrual Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-2">
+      Calculate how much paid time off accrues per pay period, per hour worked, or as an annual lump sum. Supports the three standard accrual methods.
+    </p>
+    <div class="mb-8 p-4 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-700">
+      <p class="text-sm text-amber-800 dark:text-amber-200">
+        <strong>Note:</strong> This calculator provides mathematical estimates only. PTO entitlement rules, accrual caps, and payout obligations vary by US state and employer policy. This is not legal advice. Consult your HR department or a qualified employment attorney for your specific situation.
+      </p>
+    </div>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+
+      <!-- Method selector -->
+      <div class="mb-6">
+        <label for="method" class="block text-sm font-medium text-[var(--color-text)] mb-2">Accrual Method</label>
+        <select id="method" class="w-full sm:w-64">
+          <option value="per-period">Per Pay Period</option>
+          <option value="per-hour">Per Hour Worked</option>
+          <option value="lump-sum">Annual Lump Sum</option>
+        </select>
+      </div>
+
+      <!-- Common input -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="annual-days" class="block text-sm font-medium text-[var(--color-text)] mb-1">Annual PTO Days</label>
+          <input type="number" id="annual-days" inputmode="decimal" min="0" step="any" placeholder="e.g. 15" value="15" aria-describedby="days-error" />
+          <p id="days-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+
+        <!-- Per-period input -->
+        <div id="period-input">
+          <label for="pay-periods" class="block text-sm font-medium text-[var(--color-text)] mb-1">Pay Periods per Year</label>
+          <select id="pay-periods" class="w-full">
+            <option value="26">Bi-weekly (26)</option>
+            <option value="24">Semi-monthly (24)</option>
+            <option value="52">Weekly (52)</option>
+            <option value="12">Monthly (12)</option>
+          </select>
+        </div>
+
+        <!-- Per-hour input -->
+        <div id="hours-input" class="hidden">
+          <label for="annual-hours" class="block text-sm font-medium text-[var(--color-text)] mb-1">Annual Hours Worked</label>
+          <input type="number" id="annual-hours" inputmode="decimal" min="1" step="any" placeholder="e.g. 2080" value="2080" aria-describedby="hours-error" />
+          <p id="hours-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+      </div>
+
+      <div id="results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <span id="primary-label" class="text-sm font-medium text-[var(--color-text)]">PTO per Pay Period</span>
+          <span id="result-primary" class="text-2xl font-bold text-[var(--color-accent)]">0.577 days</span>
+        </div>
+        <div id="secondary-row" class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span id="secondary-label" class="text-sm text-[var(--color-text-muted)]">Annual total</span>
+          <span id="result-secondary" class="text-sm font-medium text-[var(--color-text)]">15 days</span>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display">15 days ÷ 26 pay periods = 0.5769 days/period</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="copy-result" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy Result</button>
+        <button id="copy-link" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy link to this calculation</button>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">The Three PTO Accrual Methods</h2>
+        <div class="space-y-4 text-[var(--color-text-muted)]">
+          <div class="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+            <h3 class="font-semibold text-[var(--color-text)] mb-1">Per Pay Period</h3>
+            <p>PTO accrues at each paycheck. Formula: Annual Days ÷ Pay Periods per Year. Most common method for salaried employees. Works for weekly (52), bi-weekly (26), semi-monthly (24), and monthly (12) schedules.</p>
+          </div>
+          <div class="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+            <h3 class="font-semibold text-[var(--color-text)] mb-1">Per Hour Worked</h3>
+            <p>PTO accrues based on actual hours worked. Formula: (Annual Days × 8) ÷ Annual Hours Worked. Common for hourly and part-time employees. Ties PTO to actual work rather than calendar time.</p>
+          </div>
+          <div class="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+            <h3 class="font-semibold text-[var(--color-text)] mb-1">Annual Lump Sum</h3>
+            <p>The full PTO balance is granted at the start of the year (or employment anniversary). Simple but creates liability risk for employers if employees leave early having used more PTO than they "earned." Common at companies with unlimited PTO transitions or tenure-based grants.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Legal Disclaimer — PTO Rules Vary by State</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          PTO entitlement, accrual caps, carryover rules, and termination payout requirements vary significantly by US state and employer policy:
+        </p>
+        <ul class="mt-3 space-y-2 text-[var(--color-text-muted)] list-disc list-inside">
+          <li><strong>California:</strong> Prohibits "use it or lose it" policies; accrued PTO must be paid out on termination.</li>
+          <li><strong>Maine:</strong> Employers with 10+ employees must provide up to 40 hours of paid leave annually.</li>
+          <li><strong>Colorado:</strong> FAMLI program provides paid family leave; separate from employer PTO.</li>
+          <li><strong>Most other states:</strong> No mandatory paid vacation law; PTO is governed by employer policy.</li>
+        </ul>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          This calculator provides arithmetic estimates only. For guidance on your specific situation, consult your HR department or a qualified employment attorney.
+        </p>
+      </section>
+
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+
+    <section class="mt-12 pt-8 border-t border-[var(--color-border)]">
+      <h2 class="text-xl font-semibold text-[var(--color-text)] mb-4">Ad Campaign Calculators</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <a href="/" class="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 hover:border-[var(--color-accent)] transition-colors no-underline">
+          <div class="font-medium text-[var(--color-accent)]">CPM Calculator</div>
+          <div class="text-sm text-[var(--color-text-muted)] mt-0.5">Cost per thousand impressions</div>
+        </a>
+        <a href="/cpc-calculator" class="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 hover:border-[var(--color-accent)] transition-colors no-underline">
+          <div class="font-medium text-[var(--color-accent)]">CPC Calculator</div>
+          <div class="text-sm text-[var(--color-text-muted)] mt-0.5">Cost per click</div>
+        </a>
+        <a href="/roas-calculator" class="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 hover:border-[var(--color-accent)] transition-colors no-underline">
+          <div class="font-medium text-[var(--color-accent)]">ROAS Calculator</div>
+          <div class="text-sm text-[var(--color-text-muted)] mt-0.5">Return on ad spend</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+(function() {
+  function fmtN(v, d = 4) { return new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(v); }
+
+  const methodEl = document.getElementById('method');
+  const daysEl = document.getElementById('annual-days');
+  const periodsEl = document.getElementById('pay-periods');
+  const hoursEl = document.getElementById('annual-hours');
+  const periodInput = document.getElementById('period-input');
+  const hoursInput = document.getElementById('hours-input');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('days')) daysEl.value = params.get('days');
+  if (params.has('periods')) periodsEl.value = params.get('periods');
+  if (params.has('hours')) hoursEl.value = params.get('hours');
+  if (params.has('method')) methodEl.value = params.get('method');
+
+  function updateMethodUI() {
+    const m = methodEl.value;
+    periodInput.classList.toggle('hidden', m !== 'per-period');
+    hoursInput.classList.toggle('hidden', m !== 'per-hour');
+    recalc();
+  }
+
+  function clearErr(el, errEl) { el.classList.remove('error'); errEl.classList.add('hidden'); errEl.textContent = ''; }
+  function showErr(el, errEl, msg) { el.classList.add('error'); errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function getVal(el) { const v = el.value.trim(); if (v === '') return null; const n = parseFloat(v); return isNaN(n) ? NaN : n; }
+
+  function recalc() {
+    const method = methodEl.value;
+    const daysErr = document.getElementById('days-error');
+    const hoursErr = document.getElementById('hours-error');
+    clearErr(daysEl, daysErr);
+    if (hoursErr) clearErr(hoursEl, hoursErr);
+
+    const days = getVal(daysEl);
+    if (days === null || isNaN(days) || days < 0) {
+      if (days !== null && (isNaN(days) || days < 0)) showErr(daysEl, daysErr, 'Must be a non-negative number.');
+      document.getElementById('result-primary').textContent = '—';
+      document.getElementById('result-secondary').textContent = '—';
+      document.getElementById('formula-display').textContent = '';
+      return;
+    }
+
+    const primaryLbl = document.getElementById('primary-label');
+    const secondaryLbl = document.getElementById('secondary-label');
+    const primaryEl = document.getElementById('result-primary');
+    const secondaryEl = document.getElementById('result-secondary');
+    const formulaEl = document.getElementById('formula-display');
+    const secondaryRow = document.getElementById('secondary-row');
+
+    if (method === 'per-period') {
+      const periods = parseFloat(periodsEl.value);
+      const perPeriod = days / periods;
+      primaryLbl.textContent = 'PTO per Pay Period';
+      secondaryLbl.textContent = 'Annual total';
+      primaryEl.textContent = fmtN(perPeriod, 4) + ' days';
+      secondaryEl.textContent = fmtN(days, 1) + ' days';
+      formulaEl.textContent = `${fmtN(days,1)} days ÷ ${periods} pay periods = ${fmtN(perPeriod, 4)} days/period`;
+      secondaryRow.classList.remove('hidden');
+    } else if (method === 'per-hour') {
+      const hours = getVal(hoursEl);
+      if (hours === null || isNaN(hours) || hours <= 0) {
+        if (hours !== null && (isNaN(hours) || hours <= 0)) showErr(hoursEl, hoursErr, 'Must be greater than zero.');
+        primaryEl.textContent = '—'; formulaEl.textContent = ''; return;
+      }
+      const perHour = (days * 8) / hours;
+      primaryLbl.textContent = 'PTO per Hour Worked';
+      secondaryLbl.textContent = '1 hour PTO per N hours worked';
+      primaryEl.textContent = fmtN(perHour, 4) + ' hrs/hr';
+      secondaryEl.textContent = '1 hr PTO per ' + fmtN(1 / perHour, 1) + ' hrs worked';
+      formulaEl.textContent = `(${fmtN(days,1)} days × 8 hrs) ÷ ${fmtN(hours)} hrs = ${fmtN(perHour,4)} hrs PTO/hr worked`;
+      secondaryRow.classList.remove('hidden');
+    } else {
+      primaryLbl.textContent = 'Annual PTO Balance';
+      primaryEl.textContent = fmtN(days, 1) + ' days';
+      formulaEl.textContent = `Annual lump sum: ${fmtN(days,1)} days granted at start of year`;
+      secondaryRow.classList.add('hidden');
+    }
+
+    const p = new URLSearchParams();
+    p.set('days', daysEl.value);
+    p.set('method', method);
+    if (method === 'per-period') p.set('periods', periodsEl.value);
+    if (method === 'per-hour' && hoursEl.value) p.set('hours', hoursEl.value);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  methodEl.addEventListener('change', updateMethodUI);
+  [daysEl, periodsEl, hoursEl].forEach(el => el.addEventListener('input', recalc));
+
+  document.getElementById('copy-result').addEventListener('click', function() {
+    const text = `${document.getElementById('primary-label').textContent}: ${document.getElementById('result-primary').textContent}`;
+    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
+  });
+  document.getElementById('copy-link').addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
+  });
+
+  updateMethodUI();
+})();
+</script>

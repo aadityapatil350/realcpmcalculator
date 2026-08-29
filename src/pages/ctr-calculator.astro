@@ -1,0 +1,239 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/ctr-calculator';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CTR Calculator",
+  "url": pageUrl,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  {
+    q: "How do you calculate click-through rate?",
+    a: "CTR = (Clicks ÷ Impressions) × 100. If an ad received 250 clicks from 10,000 impressions, the CTR is 2.5%. This calculator solves in all directions: enter clicks and impressions to get CTR, enter CTR and impressions to forecast clicks, or enter clicks and CTR to find required impressions."
+  },
+  {
+    q: "What is a good CTR?",
+    a: `CTR benchmarks vary dramatically by channel. Industry averages (2024): Google Search Ads 6–7%; Google Display Network 0.35%; Meta Ads (Facebook) 0.90%; Instagram 0.52%; LinkedIn 0.39%; TikTok 1.0%; Amazon Sponsored Products 0.35–0.5%. Search ads have the highest CTR because they match user intent. Display and social typically run under 1%. Sources: WordStream, Statista, platform benchmarks. Updated August 2026.`
+  },
+  {
+    q: "How does CTR affect Quality Score?",
+    a: "In Google Ads, CTR is one of the primary signals in Quality Score calculation. Higher CTR relative to competitors at the same auction position signals that your ad is relevant — Google rewards this with lower CPCs and better positions. A high CTR from poorly targeted traffic (broad match without negative keywords) can inflate CTR while reducing conversion quality. Quality Score considers expected CTR, ad relevance, and landing page experience."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a.replace(/<[^>]+>/g, '') }
+  }))
+};
+---
+<BaseLayout
+  title="CTR Calculator – Click-Through Rate, Solve Any Field"
+  description="Free CTR calculator — calculate click-through rate, clicks, or impressions instantly. Solves in any direction with benchmarks by channel for 2024."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/ctr-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">CTR Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      Calculate click-through rate, forecast clicks from a target CTR, or find the impressions needed for a target click volume. Enter any two fields.
+    </p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label for="clicks" class="block text-sm font-medium text-[var(--color-text)] mb-1">Clicks</label>
+          <input type="number" id="clicks" inputmode="decimal" min="0" step="any" placeholder="e.g. 250" value="250" aria-describedby="clicks-error" />
+          <p id="clicks-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="impressions" class="block text-sm font-medium text-[var(--color-text)] mb-1">Impressions</label>
+          <input type="number" id="impressions" inputmode="decimal" min="0" step="any" placeholder="e.g. 10000" value="10000" aria-describedby="impressions-error" />
+          <p id="impressions-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="ctr" class="block text-sm font-medium text-[var(--color-text)] mb-1">CTR (%)</label>
+          <input type="number" id="ctr" inputmode="decimal" min="0" step="any" placeholder="calculated" aria-describedby="ctr-error" />
+          <p id="ctr-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+      </div>
+
+      <div id="results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-[var(--color-text)]">CTR (Click-Through Rate)</span>
+          <span id="result-ctr" class="text-2xl font-bold text-[var(--color-accent)]">2.50%</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Clicks</span>
+          <span id="result-clicks" class="text-sm font-medium text-[var(--color-text)]">250</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Impressions</span>
+          <span id="result-impressions" class="text-sm font-medium text-[var(--color-text)]">10,000</span>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display">CTR = (250 ÷ 10,000) × 100 = 2.50%</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="copy-result" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy Result</button>
+        <button id="copy-link" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy link to this calculation</button>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">How to Use This Click-Through Rate Calculator</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">Enter any two of Clicks, Impressions, and CTR — the third calculates instantly.</p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3"><strong>Example:</strong> 250 clicks from 10,000 impressions = 2.50% CTR.</p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3"><strong>Forecasting clicks:</strong> Enter CTR = 3% and Impressions = 50,000 → Expected clicks = 1,500.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">The CTR Formula Explained</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          CTR (%) = (Clicks ÷ Impressions) × 100
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed"><strong>Worked example:</strong> 250 clicks ÷ 10,000 impressions × 100 = <strong>2.50%</strong></p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">What Is a Good CTR? Benchmarks by Channel</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead><tr class="bg-[var(--color-bg-subtle)]">
+              <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Channel</th>
+              <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Avg. CTR</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)]">Google Search Ads</td><td class="text-right p-3 border border-[var(--color-border)]">6–7%</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Google Display Network</td><td class="text-right p-3 border border-[var(--color-border)]">0.35%</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Meta Ads (Facebook)</td><td class="text-right p-3 border border-[var(--color-border)]">0.90%</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Instagram</td><td class="text-right p-3 border border-[var(--color-border)]">0.52%</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">LinkedIn Ads</td><td class="text-right p-3 border border-[var(--color-border)]">0.39%</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">TikTok Ads</td><td class="text-right p-3 border border-[var(--color-border)]">1.0%</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Amazon Sponsored Products</td><td class="text-right p-3 border border-[var(--color-border)]">0.35–0.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: WordStream Google Ads benchmarks; Statista Meta/Instagram data; LinkedIn Marketing Solutions; TikTok for Business; Amazon Advertising (2024). Updated August 2026.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Common CTR Mistakes</h2>
+        <ul class="space-y-3 text-[var(--color-text-muted)]">
+          <li><strong>Comparing CTR across channels.</strong> A 6% Google Search CTR is normal; a 6% LinkedIn CTR would be extraordinary. Benchmark within channels only.</li>
+          <li><strong>Optimizing CTR at the expense of conversion rate.</strong> A clickbait headline can inflate CTR while attracting visitors who never convert. Always pair CTR with CPA.</li>
+          <li><strong>Ignoring impression quality.</strong> A high CTR from irrelevant audiences means you're paying for clicks that won't convert.</li>
+        </ul>
+      </section>
+
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/ctr-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+(function() {
+  function fmtN(v, d = 0) { return new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(v); }
+
+  const clicksEl = document.getElementById('clicks');
+  const impressionsEl = document.getElementById('impressions');
+  const ctrEl = document.getElementById('ctr');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('clicks')) clicksEl.value = params.get('clicks');
+  if (params.has('impressions')) impressionsEl.value = params.get('impressions');
+  if (params.has('ctr')) ctrEl.value = params.get('ctr');
+
+  function clearErr(el, errEl) { el.classList.remove('error'); errEl.classList.add('hidden'); errEl.textContent = ''; }
+  function showErr(el, errEl, msg) { el.classList.add('error'); errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function getVal(el) { const v = el.value.trim(); if (v === '') return null; const n = parseFloat(v); return isNaN(n) ? NaN : n; }
+
+  function recalc() {
+    const clErr = document.getElementById('clicks-error');
+    const impErr = document.getElementById('impressions-error');
+    const ctrErr = document.getElementById('ctr-error');
+    clearErr(clicksEl, clErr); clearErr(impressionsEl, impErr); clearErr(ctrEl, ctrErr);
+
+    const cl = getVal(clicksEl);
+    const imp = getVal(impressionsEl);
+    const ctr = getVal(ctrEl);
+
+    let valid = true;
+    if (cl !== null) { if (isNaN(cl)) { showErr(clicksEl, clErr, 'Must be a valid number.'); valid = false; } else if (cl < 0) { showErr(clicksEl, clErr, 'Cannot be negative.'); valid = false; } }
+    if (imp !== null) { if (isNaN(imp)) { showErr(impressionsEl, impErr, 'Must be a valid number.'); valid = false; } else if (imp < 0) { showErr(impressionsEl, impErr, 'Cannot be negative.'); valid = false; } }
+    if (ctr !== null) { if (isNaN(ctr)) { showErr(ctrEl, ctrErr, 'Must be a valid number.'); valid = false; } else if (ctr < 0) { showErr(ctrEl, ctrErr, 'Cannot be negative.'); valid = false; } }
+    if (!valid) return;
+
+    const filled = [cl, imp, ctr].filter(v => v !== null);
+    if (filled.length < 2) { document.getElementById('result-ctr').textContent = '—'; document.getElementById('result-clicks').textContent = '—'; document.getElementById('result-impressions').textContent = '—'; document.getElementById('formula-display').textContent = ''; return; }
+
+    let ctrVal, clVal, impVal, formula;
+
+    if (cl !== null && imp !== null) {
+      if (imp === 0) { showErr(impressionsEl, impErr, 'Impressions must be greater than zero.'); return; }
+      ctrVal = (cl / imp) * 100; clVal = cl; impVal = imp;
+      formula = `CTR = (${fmtN(cl)} ÷ ${fmtN(imp)}) × 100 = ${fmtN(ctrVal, 2)}%`;
+    } else if (ctr !== null && imp !== null) {
+      clVal = (ctr / 100) * imp; ctrVal = ctr; impVal = imp;
+      formula = `Clicks = (${fmtN(ctr, 2)}% ÷ 100) × ${fmtN(imp)} = ${fmtN(clVal, 0)}`;
+    } else {
+      if (ctr === 0) { showErr(ctrEl, ctrErr, 'CTR must be greater than zero.'); return; }
+      impVal = (cl / ctr) * 100; clVal = cl; ctrVal = ctr;
+      formula = `Impressions = ${fmtN(cl)} ÷ (${fmtN(ctr, 2)}% ÷ 100) = ${fmtN(impVal)}`;
+    }
+
+    document.getElementById('result-ctr').textContent = fmtN(ctrVal, 2) + '%';
+    document.getElementById('result-clicks').textContent = fmtN(clVal, 0);
+    document.getElementById('result-impressions').textContent = fmtN(impVal, 0);
+    document.getElementById('formula-display').textContent = formula;
+
+    const p = new URLSearchParams();
+    if (clicksEl.value) p.set('clicks', clicksEl.value);
+    if (impressionsEl.value) p.set('impressions', impressionsEl.value);
+    if (ctrEl.value) p.set('ctr', ctrEl.value);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  [clicksEl, impressionsEl, ctrEl].forEach(el => el.addEventListener('input', recalc));
+
+  document.getElementById('copy-result').addEventListener('click', function() {
+    const text = `CTR: ${document.getElementById('result-ctr').textContent} | Clicks: ${document.getElementById('result-clicks').textContent} | Impressions: ${document.getElementById('result-impressions').textContent}`;
+    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
+  });
+
+  document.getElementById('copy-link').addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
+  });
+
+  recalc();
+})();
+</script>

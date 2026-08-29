@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/contact';
+---
+<BaseLayout
+  title="Contact – RealCPMCalculator.com"
+  description="Contact the RealCPMCalculator.com team. We read every message."
+  canonical={pageUrl}
+>
+  <SiteHeader />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-[var(--color-text)] mb-2">Contact</h1>
+    <p class="text-[var(--color-text-muted)] mt-4 leading-relaxed">
+      Found a calculation error? Spotted a benchmark that needs updating? Have a feature request?
+    </p>
+    <p class="text-[var(--color-text-muted)] mt-3 leading-relaxed">
+      Email us at:
+    </p>
+    <p class="mt-4 text-xl font-medium text-[var(--color-text)]">
+      <a href="mailto:hello@realcpmcalculator.com" class="text-[var(--color-accent)]">hello@realcpmcalculator.com</a>
+    </p>
+    <p class="text-[var(--color-text-muted)] mt-6 leading-relaxed">
+      We aim to respond within 2 business days. For urgent issues, please include "URGENT" in the subject line.
+    </p>
+    <p class="text-[var(--color-text-muted)] mt-4 leading-relaxed text-sm">
+      Note: We do not accept guest posts, link exchange requests, or paid placement. Unsolicited commercial email is ignored.
+    </p>
+  </main>
+  <SiteFooter />
+</BaseLayout>

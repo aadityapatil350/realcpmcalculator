@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/about';
+---
+<BaseLayout
+  title="About – RealCPMCalculator.com"
+  description="About RealCPMCalculator.com — who built it, why, and the methodology behind the calculations."
+  canonical={pageUrl}
+>
+  <SiteHeader />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <h1 class="text-3xl font-bold text-[var(--color-text)] mb-2">About This Site</h1>
+
+    <div class="space-y-8 text-[var(--color-text-muted)] leading-relaxed mt-8">
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Why We Built This</h2>
+        <p>
+          Every paid-media practitioner has, at some point, searched for a CPM calculator and landed on a page that either only solves one direction, shows a raw number with no context, breaks on mobile, or looks like it was built in 2009. The existing tools are frustrating to use and embarrassing to share with clients.
+        </p>
+        <p class="mt-3">
+          RealCPMCalculator.com was built to fix that. The calculators here solve in any direction, show the working, support dark mode, work on 360px screens, and produce shareable URLs you can paste into a Slack message or a client presentation.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">The Calculation Methodology</h2>
+        <p>
+          All formulas implement the standard industry relationships used by Google Ads, Meta Ads, and other major ad platforms:
+        </p>
+        <ul class="mt-3 space-y-1 list-disc list-inside">
+          <li>CPM = (Spend ÷ Impressions) × 1,000</li>
+          <li>CPC = Spend ÷ Clicks</li>
+          <li>CTR = (Clicks ÷ Impressions) × 100</li>
+          <li>ROAS = Revenue ÷ Spend</li>
+          <li>Break-Even ROAS = 1 ÷ Gross Margin</li>
+          <li>CAC = (Sales Spend + Marketing Spend) ÷ New Customers</li>
+          <li>CPV = Spend ÷ Views</li>
+        </ul>
+        <p class="mt-3">
+          Calculations run entirely in your browser using vanilla JavaScript. The engine never rounds internally — rounding happens only at display time, so derived calculations remain precise.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Privacy by Design</h2>
+        <p>
+          Nothing you type into these calculators is transmitted anywhere. There is no server receiving your ad spend figures, no database storing campaign data, no analytics tracking what numbers you enter. The only thing we store locally is your theme preference (light vs. dark) in your browser's <code>localStorage</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Benchmark Sources</h2>
+        <p>
+          The industry benchmark tables throughout the site cite their sources and date stamps. We use publicly available data from WordStream, Statista, Google Ads, Meta for Business, LinkedIn Marketing Solutions, TikTok for Business, and Amazon Advertising. We review and update benchmarks annually. If you spot a figure that's out of date, <a href="/contact" class="text-[var(--color-accent)]">let us know</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Contact</h2>
+        <p>
+          Reach us at <a href="mailto:hello@realcpmcalculator.com" class="text-[var(--color-accent)]">hello@realcpmcalculator.com</a> or via the <a href="/contact" class="text-[var(--color-accent)]">contact page</a>. We read every message.
+        </p>
+      </section>
+
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

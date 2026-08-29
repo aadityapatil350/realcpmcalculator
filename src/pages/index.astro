@@ -1,0 +1,433 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CPM Calculator",
+  "url": pageUrl,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  {
+    q: "How do you calculate CPM?",
+    a: "CPM = (Total Spend ÷ Total Impressions) × 1,000. For example, a $5,000 campaign that delivered 250,000 impressions has a CPM of $20.00. The calculator above solves in any direction: enter spend and impressions to get CPM, or enter CPM and impressions to find required spend."
+  },
+  {
+    q: "What is the formula for CPM?",
+    a: "The CPM formula is: CPM = (Spend ÷ Impressions) × 1,000. Rearranged: Impressions = (Spend ÷ CPM) × 1,000, and Spend = (Impressions ÷ 1,000) × CPM. This calculator handles all three directions."
+  },
+  {
+    q: "How do you determine CPM for a campaign?",
+    a: "Divide your total campaign spend by total impressions, then multiply by 1,000. Ad platforms like Google Ads and Meta Ads report CPM automatically in their dashboards. If you're planning a campaign, use the reverse formula: multiply your target CPM by planned impressions, divide by 1,000 to get required budget."
+  },
+  {
+    q: "What is a good CPM?",
+    a: `CPM varies widely by ad format, channel, audience quality, and targeting specificity. Industry averages (2024): Google Display Network $2–$5; Meta Ads (Facebook/Instagram) $7–$14; LinkedIn Ads $26–$50; TikTok Ads $9–$10; YouTube Ads $4–$10; Amazon Ads $2–$9. Lower CPM is not always better — factor in audience quality and conversion rates. Sources: WordStream, Statista, platform-reported benchmarks (2024). Updated August 2026.`
+  },
+  {
+    q: "CPC vs CPM — which should I use?",
+    a: "Choose CPM (cost per thousand impressions) for brand awareness campaigns where your goal is reach and visibility — you pay per view. Choose CPC (cost per click) for performance campaigns where you only pay when someone takes action. CPM is typically better for video and display; CPC for search and direct-response."
+  },
+  {
+    q: "What does 'CPM schedule' mean?",
+    a: "In media planning, a CPM schedule (also called CPM scheduling) refers to a campaign structure where inventory is purchased on a cost-per-thousand-impressions basis rather than a fixed placement fee or cost-per-click. A media buyer building a CPM schedule forecasts required budget as: Budget = (Target Impressions ÷ 1,000) × CPM Rate."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a.replace(/<[^>]+>/g, '') }
+  }))
+};
+---
+<BaseLayout
+  title="CPM Calculator – Cost Per 1,000 Impressions, Free & Instant"
+  description="Free CPM calculator — solve spend, impressions, or CPM in any direction. Live results, shareable URLs, dark mode. The only CPM calculator that works both ways."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/" />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">CPM Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      Calculate CPM (cost per thousand impressions), total ad spend, or impression volume — in any direction. Enter any two fields to instantly solve the third.
+    </p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+
+      <div class="flex items-center gap-3 mb-6">
+        <label for="currency" class="text-sm font-medium text-[var(--color-text-muted)] whitespace-nowrap">Currency:</label>
+        <select id="currency" class="w-36">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CAD">CAD (C$)</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">Total Spend</label>
+          <input type="number" id="spend" inputmode="decimal" min="0" step="any" placeholder="e.g. 5000" value="5000" aria-describedby="spend-error" />
+          <p id="spend-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="impressions" class="block text-sm font-medium text-[var(--color-text)] mb-1">Impressions</label>
+          <input type="number" id="impressions" inputmode="decimal" min="0" step="any" placeholder="e.g. 250000" value="250000" aria-describedby="impressions-error" />
+          <p id="impressions-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="cpm" class="block text-sm font-medium text-[var(--color-text)] mb-1">CPM</label>
+          <input type="number" id="cpm" inputmode="decimal" min="0" step="any" placeholder="calculated" aria-describedby="cpm-error" />
+          <p id="cpm-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+      </div>
+
+      <details class="mb-6">
+        <summary class="text-sm text-[var(--color-text-muted)] cursor-pointer hover:text-[var(--color-text)] select-none py-1">
+          + Add clicks &amp; conversions for extended metrics (CPC, CTR, CPA)
+        </summary>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label for="clicks" class="block text-sm font-medium text-[var(--color-text)] mb-1">Clicks <span class="text-[var(--color-text-subtle)] font-normal">(optional)</span></label>
+            <input type="number" id="clicks" inputmode="decimal" min="0" step="any" placeholder="e.g. 1250" aria-describedby="clicks-error" />
+            <p id="clicks-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+          </div>
+          <div>
+            <label for="conversions" class="block text-sm font-medium text-[var(--color-text)] mb-1">Conversions <span class="text-[var(--color-text-subtle)] font-normal">(optional)</span></label>
+            <input type="number" id="conversions" inputmode="decimal" min="0" step="any" placeholder="e.g. 50" aria-describedby="conversions-error" />
+            <p id="conversions-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+          </div>
+        </div>
+      </details>
+
+      <div id="results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-[var(--color-text)]">CPM (Cost per 1,000 Impressions)</span>
+          <span id="result-cpm" class="text-2xl font-bold text-[var(--color-accent)]">$20.00</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Total Spend</span>
+          <span id="result-spend" class="text-sm font-medium text-[var(--color-text)]">$5,000.00</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Impressions</span>
+          <span id="result-impressions" class="text-sm font-medium text-[var(--color-text)]">250,000</span>
+        </div>
+        <div id="extended-results" class="hidden border-t border-[var(--color-result-border)] pt-3 space-y-3">
+          <div id="cpc-row" class="hidden justify-between items-center flex">
+            <span class="text-sm text-[var(--color-text-muted)]">CPC (Cost per Click)</span>
+            <span id="result-cpc" class="text-sm font-medium text-[var(--color-text)]">—</span>
+          </div>
+          <div id="ctr-row" class="hidden justify-between items-center flex">
+            <span class="text-sm text-[var(--color-text-muted)]">CTR (Click-Through Rate)</span>
+            <span id="result-ctr" class="text-sm font-medium text-[var(--color-text)]">—</span>
+          </div>
+          <div id="cpa-row" class="hidden justify-between items-center flex">
+            <span class="text-sm text-[var(--color-text-muted)]">CPA (Cost per Acquisition)</span>
+            <span id="result-cpa" class="text-sm font-medium text-[var(--color-text)]">—</span>
+          </div>
+          <div id="cvr-row" class="hidden justify-between items-center flex">
+            <span class="text-sm text-[var(--color-text-muted)]">CVR (Conversion Rate)</span>
+            <span id="result-cvr" class="text-sm font-medium text-[var(--color-text)]">—</span>
+          </div>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display">CPM = ($5,000 ÷ 250,000) × 1,000 = $20.00</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="copy-result" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy Result</button>
+        <button id="copy-link" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy link to this calculation</button>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">How to Use This CPM Calculator</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Fill in any two of <strong>Total Spend</strong>, <strong>Impressions</strong>, and <strong>CPM</strong>. The third calculates instantly with no submit button.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Measuring a live campaign:</strong> Enter spend = $5,000 and impressions = 250,000. CPM = <strong>$20.00</strong>. The formula displayed below the result shows every step.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Budget planning:</strong> Enter CPM = $15 and target impressions = 500,000. Required spend = <strong>$7,500</strong>.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Impression forecasting:</strong> Enter spend = $10,000 and CPM = $12. Expected impressions = <strong>833,333</strong>.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Expand "Add clicks &amp; conversions" to also calculate CPC, CTR, CPA, and CVR from the same session. All calculations happen in your browser — nothing you enter is transmitted or stored.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">The CPM Formula Explained</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          CPM = (Total Spend ÷ Total Impressions) × 1,000
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          <strong>CPM</strong> stands for <em>cost per mille</em> — "mille" is Latin for thousand. It expresses how much an advertiser pays for one thousand ad impressions.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Worked example:</strong> Campaign spend = $5,000. Delivered impressions = 250,000.<br/>
+          CPM = ($5,000 ÷ 250,000) × 1,000 = <strong>$20.00</strong>
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Calculating cost per impression (without the ×1,000) gives a very small number ($0.02), which is why the industry standardizes on per-thousand. The CPM calculation formula always multiplies by 1,000 at the end.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">CPM Scheduling — What It Means in Media Buying</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          A <strong>CPM schedule</strong> (or CPM scheduling) is a media plan structured around impression-based pricing. Instead of paying a flat fee for a placement, the advertiser commits to a CPM rate and pays per thousand impressions delivered.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          To build a CPM schedule budget: Spend = (Target Impressions ÷ 1,000) × CPM Rate. A campaign targeting 1,000,000 impressions at a $15 CPM requires a $15,000 budget.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          CPM scheduling is common in programmatic display, video pre-roll, connected TV (CTV), and direct publisher deals. The calculator above handles all CPM scheduling math — enter CPM and impressions to find budget, or enter budget and impressions to find your effective CPM.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">CPC vs CPM — Which Should You Use?</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          The right buying model depends on your campaign objective.
+        </p>
+        <div class="overflow-x-auto mt-3">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold"></th>
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">CPM</th>
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">CPC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)] font-medium">Best for</td><td class="p-3 border border-[var(--color-border)]">Brand awareness, reach, video</td><td class="p-3 border border-[var(--color-border)]">Direct response, lead gen, sales</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)] font-medium">You pay for</td><td class="p-3 border border-[var(--color-border)]">Every 1,000 impressions</td><td class="p-3 border border-[var(--color-border)]">Each click only</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)] font-medium">Risk</td><td class="p-3 border border-[var(--color-border)]">Paying for low-engagement inventory</td><td class="p-3 border border-[var(--color-border)]">Low volume if CTR is poor</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)] font-medium">Control</td><td class="p-3 border border-[var(--color-border)]">Budget predictable; clicks vary</td><td class="p-3 border border-[var(--color-border)]">Clicks predictable; spend varies</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Use our <a href="/cpc-calculator" class="text-[var(--color-accent)]">CPC calculator</a> to model CPC campaigns alongside CPM.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">What Is a Good CPM? Benchmarks by Channel</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          Lower CPM is not always better — a highly targeted LinkedIn audience at $40 CPM may deliver better ROI than a broad display audience at $2 CPM. Evaluate CPM alongside CTR and conversion rate.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Channel</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Avg. CPM (USD)</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Typical Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)]">Google Display Network</td><td class="text-right p-3 border border-[var(--color-border)]">$3.12</td><td class="text-right p-3 border border-[var(--color-border)]">$0.50–$10</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Meta Ads (Facebook Feed)</td><td class="text-right p-3 border border-[var(--color-border)]">$11.20</td><td class="text-right p-3 border border-[var(--color-border)]">$5–$25</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Instagram Feed</td><td class="text-right p-3 border border-[var(--color-border)]">$9.45</td><td class="text-right p-3 border border-[var(--color-border)]">$4–$20</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">LinkedIn Ads</td><td class="text-right p-3 border border-[var(--color-border)]">$33.80</td><td class="text-right p-3 border border-[var(--color-border)]">$20–$70</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">TikTok Ads</td><td class="text-right p-3 border border-[var(--color-border)]">$9.16</td><td class="text-right p-3 border border-[var(--color-border)]">$4–$15</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">YouTube Pre-Roll</td><td class="text-right p-3 border border-[var(--color-border)]">$7.44</td><td class="text-right p-3 border border-[var(--color-border)]">$3–$15</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Amazon Display Ads</td><td class="text-right p-3 border border-[var(--color-border)]">$4.10</td><td class="text-right p-3 border border-[var(--color-border)]">$1–$9</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: WordStream Display benchmarks; Statista Meta Ads data; LinkedIn Marketing Solutions; TikTok for Business; YouTube for Business; Amazon Advertising (2024). Updated August 2026.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Common CPM Mistakes</h2>
+        <ul class="space-y-3 text-[var(--color-text-muted)]">
+          <li><strong>Confusing CPM with CPC.</strong> CPM is per thousand <em>impressions</em>; CPC is per <em>click</em>. A $15 CPM campaign with a 0.1% CTR produces clicks at a $15 effective CPC.</li>
+          <li><strong>Forgetting the ×1,000 in the CPM calculation formula.</strong> Cost per impression = $0.02; CPM = $20. The formula always multiplies by 1,000.</li>
+          <li><strong>Treating a low CPM as a success.</strong> Cheap inventory is often cheap for a reason. Always pair CPM with CTR and downstream conversion data.</li>
+          <li><strong>Using budget vs. actual spend.</strong> Calculate CPM from billed spend, not the planned budget, for an accurate figure.</li>
+          <li><strong>Mixing impression definitions.</strong> Google counts an impression when an ad is fetched. Meta counts when it appears on-screen. These are not equivalent — don't cross-benchmark without normalizing.</li>
+        </ul>
+      </section>
+
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/" />
+
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+(function() {
+  const currencies = {
+    USD: { locale: 'en-US', currency: 'USD' },
+    EUR: { locale: 'de-DE', currency: 'EUR' },
+    GBP: { locale: 'en-GB', currency: 'GBP' },
+    INR: { locale: 'en-IN', currency: 'INR' },
+    AUD: { locale: 'en-AU', currency: 'AUD' },
+    CAD: { locale: 'en-CA', currency: 'CAD' },
+  };
+
+  function fmt(value, currKey, decimals = 2) {
+    const c = currencies[currKey] || currencies.USD;
+    return new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.currency, minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
+  }
+
+  function fmtN(value, decimals = 0) {
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
+  }
+
+  const spendEl = document.getElementById('spend');
+  const impressionsEl = document.getElementById('impressions');
+  const cpmEl = document.getElementById('cpm');
+  const clicksEl = document.getElementById('clicks');
+  const conversionsEl = document.getElementById('conversions');
+  const currencyEl = document.getElementById('currency');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('spend')) spendEl.value = params.get('spend');
+  if (params.has('impressions')) impressionsEl.value = params.get('impressions');
+  if (params.has('cpm')) cpmEl.value = params.get('cpm');
+  if (params.has('clicks')) clicksEl.value = params.get('clicks');
+  if (params.has('conversions')) conversionsEl.value = params.get('conversions');
+  if (params.has('currency') && currencies[params.get('currency')]) currencyEl.value = params.get('currency');
+
+  function clearErr(el, errEl) { el.classList.remove('error'); errEl.classList.add('hidden'); errEl.textContent = ''; }
+  function showErr(el, errEl, msg) { el.classList.add('error'); errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function getVal(el) { const v = el.value.trim(); if (v === '') return null; const n = parseFloat(v); return isNaN(n) ? NaN : n; }
+
+  function showRow(id, content) {
+    const row = document.getElementById(id + '-row');
+    const el = document.getElementById('result-' + id);
+    if (content !== null) { row.style.display = 'flex'; el.textContent = content; }
+    else { row.style.display = 'none'; }
+  }
+
+  function recalc() {
+    const curr = currencyEl.value;
+    const spErr = document.getElementById('spend-error');
+    const impErr = document.getElementById('impressions-error');
+    const cpmErr = document.getElementById('cpm-error');
+    const clErr = document.getElementById('clicks-error');
+    const cvErr = document.getElementById('conversions-error');
+
+    clearErr(spendEl, spErr); clearErr(impressionsEl, impErr); clearErr(cpmEl, cpmErr);
+    clearErr(clicksEl, clErr); clearErr(conversionsEl, cvErr);
+
+    const s = getVal(spendEl);
+    const imp = getVal(impressionsEl);
+    const cp = getVal(cpmEl);
+    const cl = getVal(clicksEl);
+    const cv = getVal(conversionsEl);
+
+    let valid = true;
+    if (s !== null) { if (isNaN(s)) { showErr(spendEl, spErr, 'Must be a valid number.'); valid = false; } else if (s < 0) { showErr(spendEl, spErr, 'Spend cannot be negative.'); valid = false; } }
+    if (imp !== null) { if (isNaN(imp)) { showErr(impressionsEl, impErr, 'Must be a valid number.'); valid = false; } else if (imp < 0) { showErr(impressionsEl, impErr, 'Impressions cannot be negative.'); valid = false; } }
+    if (cp !== null) { if (isNaN(cp)) { showErr(cpmEl, cpmErr, 'Must be a valid number.'); valid = false; } else if (cp < 0) { showErr(cpmEl, cpmErr, 'CPM cannot be negative.'); valid = false; } }
+    if (cl !== null) { if (isNaN(cl)) { showErr(clicksEl, clErr, 'Must be a valid number.'); valid = false; } else if (cl < 0) { showErr(clicksEl, clErr, 'Clicks cannot be negative.'); valid = false; } }
+    if (cv !== null) { if (isNaN(cv)) { showErr(conversionsEl, cvErr, 'Must be a valid number.'); valid = false; } else if (cv < 0) { showErr(conversionsEl, cvErr, 'Conversions cannot be negative.'); valid = false; } }
+    if (!valid) return;
+
+    const filled = [s, imp, cp].filter(v => v !== null);
+    if (filled.length < 2) {
+      document.getElementById('result-cpm').textContent = '—';
+      document.getElementById('result-spend').textContent = '—';
+      document.getElementById('result-impressions').textContent = '—';
+      document.getElementById('formula-display').textContent = '';
+      return;
+    }
+
+    let cpmVal, spendVal, impVal, formula;
+
+    if (s !== null && imp !== null) {
+      if (imp === 0) { showErr(impressionsEl, impErr, 'Impressions must be greater than zero.'); return; }
+      cpmVal = (s / imp) * 1000; spendVal = s; impVal = imp;
+      formula = `CPM = (${fmt(s, curr)} ÷ ${fmtN(imp)}) × 1,000 = ${fmt(cpmVal, curr)}`;
+    } else if (s !== null && cp !== null) {
+      if (cp === 0) { showErr(cpmEl, cpmErr, 'CPM must be greater than zero.'); return; }
+      impVal = (s / cp) * 1000; spendVal = s; cpmVal = cp;
+      formula = `Impressions = (${fmt(s, curr)} ÷ ${fmt(cp, curr)}) × 1,000 = ${fmtN(impVal)}`;
+    } else {
+      spendVal = (imp / 1000) * cp; impVal = imp; cpmVal = cp;
+      formula = `Spend = (${fmtN(imp)} ÷ 1,000) × ${fmt(cp, curr)} = ${fmt(spendVal, curr)}`;
+    }
+
+    document.getElementById('result-cpm').textContent = fmt(cpmVal, curr);
+    document.getElementById('result-spend').textContent = fmt(spendVal, curr);
+    document.getElementById('result-impressions').textContent = fmtN(impVal);
+    document.getElementById('formula-display').textContent = formula;
+
+    const ext = document.getElementById('extended-results');
+    let anyExt = false;
+
+    if (cl !== null && !isNaN(cl) && cl >= 0 && spendVal !== undefined) {
+      if (cl > 0) { showRow('cpc', fmt(spendVal / cl, curr)); anyExt = true; }
+      if (impVal > 0) { showRow('ctr', fmtN((cl / impVal) * 100, 2) + '%'); anyExt = true; }
+    } else { showRow('cpc', null); showRow('ctr', null); }
+
+    if (cv !== null && !isNaN(cv) && cv >= 0 && spendVal !== undefined) {
+      if (cv > 0) { showRow('cpa', fmt(spendVal / cv, curr)); anyExt = true; }
+      if (cl !== null && !isNaN(cl) && cl > 0) { showRow('cvr', fmtN((cv / cl) * 100, 2) + '%'); anyExt = true; }
+    } else { showRow('cpa', null); showRow('cvr', null); }
+
+    ext.classList.toggle('hidden', !anyExt);
+
+    const p = new URLSearchParams();
+    if (spendEl.value) p.set('spend', spendEl.value);
+    if (impressionsEl.value) p.set('impressions', impressionsEl.value);
+    if (cpmEl.value) p.set('cpm', cpmEl.value);
+    if (clicksEl.value) p.set('clicks', clicksEl.value);
+    if (conversionsEl.value) p.set('conversions', conversionsEl.value);
+    p.set('currency', curr);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  [spendEl, impressionsEl, cpmEl, clicksEl, conversionsEl, currencyEl].forEach(el => el.addEventListener('input', recalc));
+
+  document.getElementById('copy-result').addEventListener('click', function() {
+    const text = `CPM: ${document.getElementById('result-cpm').textContent} | Spend: ${document.getElementById('result-spend').textContent} | Impressions: ${document.getElementById('result-impressions').textContent}`;
+    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
+  });
+
+  document.getElementById('copy-link').addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
+  });
+
+  recalc();
+})();
+</script>

@@ -1,0 +1,21 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)] mt-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <nav aria-label="Footer links">
+        <ul class="flex flex-wrap gap-4 list-none p-0 m-0 text-sm text-[var(--color-text-muted)]">
+          <li><a href="/about" class="hover:text-[var(--color-text)]">About</a></li>
+          <li><a href="/privacy" class="hover:text-[var(--color-text)]">Privacy</a></li>
+          <li><a href="/terms" class="hover:text-[var(--color-text)]">Terms</a></li>
+          <li><a href="/contact" class="hover:text-[var(--color-text)]">Contact</a></li>
+          <li><a href="/pto-accrual-calculator" class="hover:text-[var(--color-text)]">PTO Calculator</a></li>
+        </ul>
+      </nav>
+      <p class="text-sm text-[var(--color-text-subtle)]">
+        &copy; {year} RealCPMCalculator.com — All calculations run in your browser.
+      </p>
+    </div>
+  </div>
+</footer>

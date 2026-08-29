@@ -1,0 +1,285 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/cac-calculator';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CAC Calculator",
+  "url": pageUrl,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  {
+    q: "How do you calculate customer acquisition cost?",
+    a: "CAC = (Total Sales Spend + Total Marketing Spend) ÷ New Customers Acquired. For example, $10,000 in sales costs and $20,000 in marketing costs that produced 300 new customers gives a CAC of $100. Only include new customers, not returning customers or renewals."
+  },
+  {
+    q: "What is a good CAC?",
+    a: "CAC benchmarks vary widely by industry. SaaS companies typically target $100–$500 CAC for SMB products and $5,000–$50,000+ for enterprise. E-commerce typically sees $10–$100 CAC. The only meaningful benchmark is your LTV:CAC ratio — a CAC is 'good' if your customer lifetime value is at least 3× higher."
+  },
+  {
+    q: "What is a good LTV to CAC ratio?",
+    a: "The industry standard target for SaaS and subscription businesses is an LTV:CAC ratio of 3:1 or higher. Below 3:1 suggests the business is spending too much to acquire customers relative to their value. Above 5:1 may indicate underinvestment in growth. For e-commerce, ratios vary by purchase frequency and margin — the same 3× rule of thumb applies as a starting baseline."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+<BaseLayout
+  title="CAC Calculator – Customer Acquisition Cost & LTV:CAC Ratio"
+  description="Free CAC calculator — calculate customer acquisition cost and LTV:CAC ratio. Includes sales and marketing spend inputs with benchmark guidance."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/cac-calculator" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">CAC Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      Calculate customer acquisition cost from sales and marketing spend. Includes LTV:CAC ratio so you can assess campaign efficiency at a glance.
+    </p>
+
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
+
+      <div class="flex items-center gap-3 mb-6">
+        <label for="currency" class="text-sm font-medium text-[var(--color-text-muted)] whitespace-nowrap">Currency:</label>
+        <select id="currency" class="w-36">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CAD">CAD (C$)</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="sales-spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">Sales Spend</label>
+          <input type="number" id="sales-spend" inputmode="decimal" min="0" step="any" placeholder="e.g. 10000" value="10000" aria-describedby="sales-error" />
+          <p id="sales-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="marketing-spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">Marketing Spend</label>
+          <input type="number" id="marketing-spend" inputmode="decimal" min="0" step="any" placeholder="e.g. 20000" value="20000" aria-describedby="marketing-error" />
+          <p id="marketing-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="new-customers" class="block text-sm font-medium text-[var(--color-text)] mb-1">New Customers Acquired</label>
+          <input type="number" id="new-customers" inputmode="decimal" min="1" step="any" placeholder="e.g. 300" value="300" aria-describedby="customers-error" />
+          <p id="customers-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+        <div>
+          <label for="ltv" class="block text-sm font-medium text-[var(--color-text)] mb-1">Customer LTV <span class="text-[var(--color-text-subtle)] font-normal">(optional)</span></label>
+          <input type="number" id="ltv" inputmode="decimal" min="0" step="any" placeholder="e.g. 900" aria-describedby="ltv-error" />
+          <p id="ltv-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+      </div>
+
+      <div id="results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-[var(--color-text)]">Customer Acquisition Cost (CAC)</span>
+          <span id="result-cac" class="text-2xl font-bold text-[var(--color-accent)]">$100.00</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Total Spend</span>
+          <span id="result-total" class="text-sm font-medium text-[var(--color-text)]">$30,000.00</span>
+        </div>
+        <div id="ltv-ratio-row" class="hidden justify-between items-center border-t border-[var(--color-result-border)] pt-3 flex">
+          <span class="text-sm text-[var(--color-text-muted)]">LTV:CAC Ratio</span>
+          <span id="result-ltv-ratio" class="text-sm font-medium text-[var(--color-text)]">—</span>
+        </div>
+        <div id="ltv-assessment-row" class="hidden border-t border-[var(--color-result-border)] pt-3">
+          <p id="result-ltv-assessment" class="text-xs text-[var(--color-text-muted)]"></p>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display">CAC = ($10,000 + $20,000) ÷ 300 = $100.00</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="copy-result" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy Result</button>
+        <button id="copy-link" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors" style="min-height:44px">Copy link to this calculation</button>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">How to Use This Customer Acquisition Cost Calculator</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Enter your sales spend, marketing spend, and new customers acquired. CAC calculates instantly. Optionally add customer LTV to see your LTV:CAC ratio.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Example:</strong> Sales team cost = $10,000. Marketing budget = $20,000. New customers = 300.<br/>
+          CAC = ($10,000 + $20,000) ÷ 300 = <strong>$100</strong>
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">The CAC Formula Explained</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          CAC = (Sales Spend + Marketing Spend) ÷ New Customers Acquired
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Include all costs directly related to customer acquisition: ad spend, sales salaries and commissions, agency fees, tools, events. Exclude costs of serving existing customers.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>LTV:CAC Ratio</strong> = Customer Lifetime Value ÷ CAC. A ratio of 3:1 or higher is the industry benchmark for sustainable growth.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">What Is a Good CAC? Benchmarks by Industry</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead><tr class="bg-[var(--color-bg-subtle)]">
+              <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Industry</th>
+              <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Typical CAC Range</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)]">SaaS (SMB)</td><td class="text-right p-3 border border-[var(--color-border)]">$100–$500</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">SaaS (Enterprise)</td><td class="text-right p-3 border border-[var(--color-border)]">$5,000–$50,000+</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">E-commerce</td><td class="text-right p-3 border border-[var(--color-border)]">$10–$100</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Financial Services</td><td class="text-right p-3 border border-[var(--color-border)]">$300–$1,200</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Healthcare</td><td class="text-right p-3 border border-[var(--color-border)]">$250–$800</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Real Estate</td><td class="text-right p-3 border border-[var(--color-border)]">$600–$2,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: ProfitWell SaaS benchmarks; Shopify e-commerce data; industry-reported averages (2024). Updated August 2026. These are illustrative ranges — actual CAC depends on product price, sales motion, and market maturity.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Common CAC Mistakes</h2>
+        <ul class="space-y-3 text-[var(--color-text-muted)]">
+          <li><strong>Counting returning customers.</strong> CAC measures the cost of acquiring <em>new</em> customers only. Including retention revenue inflates the denominator and understates your true acquisition cost.</li>
+          <li><strong>Excluding sales costs.</strong> Marketing-only CAC ignores sales salaries, commissions, and tools. Full CAC must include both sales and marketing spend.</li>
+          <li><strong>Using a single month of data.</strong> CAC has a lag — sales cycles, delayed conversions, and seasonal marketing spend all distort single-month figures. Use trailing 3–12 months.</li>
+          <li><strong>Ignoring LTV.</strong> A $500 CAC is terrible if LTV is $600, and excellent if LTV is $3,000. Never evaluate CAC in isolation.</li>
+        </ul>
+      </section>
+
+    </article>
+
+    <AdSlot size="rectangle" />
+    <FAQ items={faqs} />
+    <RelatedTools current="/cac-calculator" />
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+(function() {
+  const currencies = {
+    USD: { locale: 'en-US', currency: 'USD' }, EUR: { locale: 'de-DE', currency: 'EUR' },
+    GBP: { locale: 'en-GB', currency: 'GBP' }, INR: { locale: 'en-IN', currency: 'INR' },
+    AUD: { locale: 'en-AU', currency: 'AUD' }, CAD: { locale: 'en-CA', currency: 'CAD' },
+  };
+  function fmt(v, k, d = 2) { const c = currencies[k]||currencies.USD; return new Intl.NumberFormat(c.locale,{style:'currency',currency:c.currency,minimumFractionDigits:d,maximumFractionDigits:d}).format(v); }
+  function fmtN(v, d = 0) { return new Intl.NumberFormat('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v); }
+
+  const salesEl = document.getElementById('sales-spend');
+  const mktEl = document.getElementById('marketing-spend');
+  const custEl = document.getElementById('new-customers');
+  const ltvEl = document.getElementById('ltv');
+  const currEl = document.getElementById('currency');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('sales')) salesEl.value = params.get('sales');
+  if (params.has('marketing')) mktEl.value = params.get('marketing');
+  if (params.has('customers')) custEl.value = params.get('customers');
+  if (params.has('ltv')) ltvEl.value = params.get('ltv');
+  if (params.has('currency') && currencies[params.get('currency')]) currEl.value = params.get('currency');
+
+  function clearErr(el, errEl) { el.classList.remove('error'); errEl.classList.add('hidden'); errEl.textContent = ''; }
+  function showErr(el, errEl, msg) { el.classList.add('error'); errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function getVal(el) { const v = el.value.trim(); if (v === '') return null; const n = parseFloat(v); return isNaN(n) ? NaN : n; }
+
+  function recalc() {
+    const curr = currEl.value;
+    clearErr(salesEl, document.getElementById('sales-error'));
+    clearErr(mktEl, document.getElementById('marketing-error'));
+    clearErr(custEl, document.getElementById('customers-error'));
+    clearErr(ltvEl, document.getElementById('ltv-error'));
+
+    const s = getVal(salesEl); const m = getVal(mktEl); const c = getVal(custEl); const l = getVal(ltvEl);
+
+    let valid = true;
+    if (s !== null) { if (isNaN(s)||s<0) { showErr(salesEl, document.getElementById('sales-error'), 'Must be a non-negative number.'); valid = false; } }
+    if (m !== null) { if (isNaN(m)||m<0) { showErr(mktEl, document.getElementById('marketing-error'), 'Must be a non-negative number.'); valid = false; } }
+    if (c !== null) { if (isNaN(c)||c<=0) { showErr(custEl, document.getElementById('customers-error'), 'Must be greater than zero.'); valid = false; } }
+    if (l !== null) { if (isNaN(l)||l<0) { showErr(ltvEl, document.getElementById('ltv-error'), 'Must be a non-negative number.'); valid = false; } }
+    if (!valid) return;
+
+    if (s === null || m === null || c === null) {
+      document.getElementById('result-cac').textContent = '—';
+      document.getElementById('result-total').textContent = '—';
+      document.getElementById('formula-display').textContent = '';
+      return;
+    }
+
+    const totalSpend = s + m;
+    const cac = totalSpend / c;
+
+    document.getElementById('result-cac').textContent = fmt(cac, curr);
+    document.getElementById('result-total').textContent = fmt(totalSpend, curr);
+    document.getElementById('formula-display').textContent = `CAC = (${fmt(s,curr)} + ${fmt(m,curr)}) ÷ ${fmtN(c)} = ${fmt(cac, curr)}`;
+
+    const ratioRow = document.getElementById('ltv-ratio-row');
+    const assessRow = document.getElementById('ltv-assessment-row');
+    if (l !== null) {
+      const ratio = l / cac;
+      document.getElementById('result-ltv-ratio').textContent = fmtN(ratio, 2) + ':1';
+      let assessment = '';
+      if (ratio < 1) assessment = `⚠️ LTV:CAC below 1:1 — each customer costs more than they're worth. Reduce CAC or improve retention.`;
+      else if (ratio < 3) assessment = `⚠️ LTV:CAC is ${fmtN(ratio,2)}:1 — below the 3:1 benchmark. Focus on reducing CAC or increasing LTV.`;
+      else if (ratio <= 5) assessment = `✓ LTV:CAC is ${fmtN(ratio,2)}:1 — healthy. This is within the 3:1–5:1 target range.`;
+      else assessment = `⬆ LTV:CAC is ${fmtN(ratio,2)}:1 — excellent, but consider whether you're underinvesting in growth.`;
+      document.getElementById('result-ltv-assessment').textContent = assessment;
+      ratioRow.style.display = 'flex'; assessRow.classList.remove('hidden');
+    } else { ratioRow.style.display = 'none'; assessRow.classList.add('hidden'); }
+
+    const p = new URLSearchParams();
+    if (salesEl.value) p.set('sales', salesEl.value);
+    if (mktEl.value) p.set('marketing', mktEl.value);
+    if (custEl.value) p.set('customers', custEl.value);
+    if (ltvEl.value) p.set('ltv', ltvEl.value);
+    p.set('currency', curr);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  [salesEl, mktEl, custEl, ltvEl, currEl].forEach(el => el.addEventListener('input', recalc));
+
+  document.getElementById('copy-result').addEventListener('click', function() {
+    const text = `CAC: ${document.getElementById('result-cac').textContent} | Total Spend: ${document.getElementById('result-total').textContent}`;
+    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
+  });
+  document.getElementById('copy-link').addEventListener('click', function() {
+    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
+  });
+
+  recalc();
+})();
+</script>

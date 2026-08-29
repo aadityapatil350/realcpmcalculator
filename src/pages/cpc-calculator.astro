@@ -1,0 +1,491 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedTools from '../components/RelatedTools.astro';
+
+const pageUrl = 'https://realcpmcalculator.com/cpc-calculator';
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CPC Calculator",
+  "url": pageUrl,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const faqs = [
+  {
+    q: "How do you calculate CPC?",
+    a: "CPC (cost per click) = Total Ad Spend ÷ Total Clicks. If you spent $1,000 and received 400 clicks, your CPC is $2.50. This calculator also solves in reverse: enter CPC and clicks to find spend, or enter spend and CPC to estimate clicks."
+  },
+  {
+    q: "How do you work out CPC?",
+    a: "Divide your total campaign spend by the number of clicks generated. For example, a $500 budget that produced 250 clicks gives a CPC of $2.00. Use the calculator above to solve for any one field from the other two."
+  },
+  {
+    q: "How do I find my CPC in Google Ads?",
+    a: "In Google Ads, open <strong>Campaigns</strong> → select your campaign or ad group → click the <strong>Columns</strong> icon and enable <strong>Avg. CPC</strong>. Google Ads calculates this automatically from your actual spend divided by actual clicks on that campaign."
+  },
+  {
+    q: "What is a good CPC?",
+    a: `A "good" CPC depends entirely on your industry and the value of a click to your business. Industry averages from Google Ads benchmark data (WordStream, 2024):
+    <table class="mt-3 w-full text-sm border-collapse">
+      <thead><tr class="bg-[var(--color-bg-subtle)]"><th class="text-left p-2 border border-[var(--color-border)]">Channel</th><th class="text-right p-2 border border-[var(--color-border)]">Avg. CPC (USD)</th></tr></thead>
+      <tbody>
+        <tr><td class="p-2 border border-[var(--color-border)]">Google Search (all industries)</td><td class="text-right p-2 border border-[var(--color-border)]">$4.22</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">Google Display Network</td><td class="text-right p-2 border border-[var(--color-border)]">$0.63</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">Meta Ads (Facebook/Instagram)</td><td class="text-right p-2 border border-[var(--color-border)]">$0.94</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">LinkedIn Ads</td><td class="text-right p-2 border border-[var(--color-border)]">$5.26</td></tr>
+        <tr><td class="p-2 border border-[var(--color-border)]">TikTok Ads</td><td class="text-right p-2 border border-[var(--color-border)]">$1.00</td></tr>
+      </tbody>
+    </table>
+    <p class="mt-2 text-xs text-[var(--color-text-subtle)]">Source: WordStream Google Ads benchmarks, 2024. Figures are cross-industry averages; legal, finance, and B2B SaaS typically run 3–5× higher.</p>`
+  },
+  {
+    q: "What is a good CPC for a PPC campaign?",
+    a: "A CPC is only 'good' relative to your conversion rate and the value of each conversion. If your product earns $200 per sale, a $5 CPC with a 4% conversion rate (CVR) means you pay $125 per sale — a strong result. If CVR drops to 1%, you're paying $500 per sale. Always evaluate CPC alongside conversion rate and cost per acquisition."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a.replace(/<[^>]+>/g, '') }
+  }))
+};
+---
+<BaseLayout
+  title="CPC Calculator – Cost Per Click, Solve Any Field"
+  description="Free CPC calculator — enter any two of spend, clicks, or CPC and instantly solve the third. Includes a PPC budget estimator for clicks from a fixed budget."
+  canonical={pageUrl}
+  schema={[webAppSchema, faqSchema]}
+>
+  <SiteHeader current="/cpc-calculator" />
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+
+    <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">CPC Calculator</h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      Enter any two fields to instantly calculate the third. Solve cost per click, total ad spend, or estimated clicks — in any direction.
+    </p>
+
+    <!-- Calculator -->
+    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm" id="calc-card">
+
+      <!-- Currency selector -->
+      <div class="flex items-center gap-3 mb-6">
+        <label for="currency" class="text-sm font-medium text-[var(--color-text-muted)] whitespace-nowrap">Currency:</label>
+        <select id="currency" class="w-36">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CAD">CAD (C$)</option>
+        </select>
+      </div>
+
+      <!-- Inputs -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label for="spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">
+            Total Spend
+          </label>
+          <input
+            type="number"
+            id="spend"
+            inputmode="decimal"
+            min="0"
+            step="any"
+            placeholder="e.g. 1000"
+            value="1000"
+            aria-describedby="spend-error"
+          />
+          <p id="spend-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+
+        <div>
+          <label for="clicks" class="block text-sm font-medium text-[var(--color-text)] mb-1">
+            Clicks
+          </label>
+          <input
+            type="number"
+            id="clicks"
+            inputmode="decimal"
+            min="0"
+            step="any"
+            placeholder="e.g. 500"
+            value="500"
+            aria-describedby="clicks-error"
+          />
+          <p id="clicks-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+
+        <div>
+          <label for="cpc" class="block text-sm font-medium text-[var(--color-text)] mb-1">
+            CPC
+          </label>
+          <input
+            type="number"
+            id="cpc"
+            inputmode="decimal"
+            min="0"
+            step="any"
+            placeholder="calculated"
+            aria-describedby="cpc-error"
+          />
+          <p id="cpc-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
+        </div>
+      </div>
+
+      <p id="calc-error" class="text-sm text-[var(--color-error)] mb-4 hidden" role="alert"></p>
+
+      <!-- Results -->
+      <div id="results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-[var(--color-text)]">Cost Per Click (CPC)</span>
+          <span id="result-cpc" class="text-2xl font-bold text-[var(--color-accent)]">—</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Total Spend</span>
+          <span id="result-spend" class="text-sm font-medium text-[var(--color-text)]">—</span>
+        </div>
+        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
+          <span class="text-sm text-[var(--color-text-muted)]">Total Clicks</span>
+          <span id="result-clicks" class="text-sm font-medium text-[var(--color-text)]">—</span>
+        </div>
+        <div class="border-t border-[var(--color-result-border)] pt-3">
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display"></p>
+        </div>
+      </div>
+
+      <!-- Copy & Share -->
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button
+          id="copy-result"
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+          style="min-height:44px"
+        >
+          Copy Result
+        </button>
+        <button
+          id="copy-link"
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+          style="min-height:44px"
+        >
+          Copy link to this calculation
+        </button>
+      </div>
+    </div>
+
+    <AdSlot size="leaderboard" />
+
+    <!-- Editorial -->
+    <article class="prose-section mt-8 space-y-8 text-[var(--color-text)]">
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">How to Use This CPC Calculator</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Fill in any two of the three fields — <strong>Total Spend</strong>, <strong>Clicks</strong>, and <strong>CPC</strong> — and the third calculates instantly. You don't need to decide which direction you're solving ahead of time.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Example:</strong> A Google Search campaign spent $1,000 and received 400 clicks. Enter spend = $1,000 and clicks = 400. The calculator shows CPC = $2.50.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Budget planning:</strong> Enter your planned budget (spend) and a target CPC, and the calculator estimates how many clicks you can expect. For example, $5,000 at a $3.00 CPC yields approximately 1,667 clicks.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          All calculations happen instantly in your browser. Nothing you enter is transmitted or stored anywhere.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">The CPC Formula Explained</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          CPC = Total Spend ÷ Total Clicks
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          <strong>Total Spend</strong> — the amount billed by the ad platform for the campaign period. Use actual billed spend, not budget.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-2">
+          <strong>Total Clicks</strong> — the number of times users clicked your ad. Most platforms deduplicate rapid repeat clicks.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-2">
+          <strong>CPC</strong> — what you paid, on average, each time someone clicked. Google Ads and Meta report this as "Avg. CPC."
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Worked example:</strong> Campaign spend = $2,400. Clicks = 960.<br/>
+          CPC = $2,400 ÷ 960 = <strong>$2.50</strong>
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">PPC Cost Estimator — What Will My Budget Buy?</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          The <code>ppc cost estimator</code> use case is the flip side of the CPC formula. Instead of measuring past performance, you use a known or expected CPC to forecast what a budget will deliver. Enter your target spend and the average CPC you expect (based on historical data or industry benchmarks), and the calculator gives you the estimated click volume.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Example:</strong> Budget = $10,000. Expected CPC based on last quarter = $3.75.<br/>
+          Estimated clicks = $10,000 ÷ $3.75 = <strong>2,667 clicks</strong>.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          Combine this with your historical conversion rate to project leads or sales: 2,667 clicks × 3% CVR = ~80 conversions.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">What Is a Good CPC? Benchmarks by Channel</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          There is no universal "good" CPC — it depends on your industry, offer value, and funnel metrics. These are cross-industry averages, updated August 2026. Your vertical will likely differ.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Channel</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Avg. CPC (USD)</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)]">Google Search (all industries)</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$4.22</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$1–$50+</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)]">Google Display Network</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.63</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.20–$2.00</td>
+              </tr>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)]">Meta Ads (Facebook/Instagram)</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.94</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.40–$3.00</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)]">LinkedIn Ads</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$5.26</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$2.00–$15.00</td>
+              </tr>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)]">TikTok Ads</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$1.00</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.50–$2.00</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)]">Amazon Sponsored Products</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.89</td>
+                <td class="text-right p-3 border border-[var(--color-border)]">$0.35–$3.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: WordStream Google Ads Benchmarks (2024); Meta Ads benchmarks via Statista (2024); LinkedIn Marketing Solutions; TikTok for Business (2024); Amazon Advertising (2024). Updated August 2026.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Common CPC Mistakes</h2>
+        <ul class="space-y-3 text-[var(--color-text-muted)]">
+          <li><strong>Confusing CPC with CPM.</strong> CPC is cost per click; CPM is cost per thousand impressions. Use our <a href="/cpm-calculator" class="text-[var(--color-accent)]">CPM calculator</a> when buying on an impression basis.</li>
+          <li><strong>Using budget instead of actual spend.</strong> If a $1,000 budget only spent $840, your true CPC is based on $840 — not $1,000.</li>
+          <li><strong>Ignoring click quality.</strong> A low CPC from Display traffic is not comparable to a low CPC from branded Search. Always segment by campaign type.</li>
+          <li><strong>Forgetting about conversion rate.</strong> A $1.50 CPC is only cheap if those clicks convert. Evaluate CPC alongside CPA using our <a href="/" class="text-[var(--color-accent)]">CPM</a> and conversion data.</li>
+          <li><strong>Mixing manual and smart bidding CPC figures.</strong> Target CPA or Max Conversions campaigns may report an Avg. CPC that doesn't reflect manual bid caps — always check the bidding strategy before benchmarking.</li>
+        </ul>
+      </section>
+
+    </article>
+
+    <AdSlot size="rectangle" />
+
+    <FAQ items={faqs} />
+    <RelatedTools current="/cpc-calculator" />
+
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+// Inline calculator logic — no external deps
+(function() {
+  const currencies = {
+    USD: { locale: 'en-US', currency: 'USD' },
+    EUR: { locale: 'de-DE', currency: 'EUR' },
+    GBP: { locale: 'en-GB', currency: 'GBP' },
+    INR: { locale: 'en-IN', currency: 'INR' },
+    AUD: { locale: 'en-AU', currency: 'AUD' },
+    CAD: { locale: 'en-CA', currency: 'CAD' },
+  };
+
+  function fmt(value, currKey, decimals = 2) {
+    const c = currencies[currKey] || currencies.USD;
+    return new Intl.NumberFormat(c.locale, {
+      style: 'currency',
+      currency: c.currency,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(value);
+  }
+
+  function fmtN(value, decimals = 0) {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(value);
+  }
+
+  const spendEl = document.getElementById('spend');
+  const clicksEl = document.getElementById('clicks');
+  const cpcEl = document.getElementById('cpc');
+  const currencyEl = document.getElementById('currency');
+  const resultCpc = document.getElementById('result-cpc');
+  const resultSpend = document.getElementById('result-spend');
+  const resultClicks = document.getElementById('result-clicks');
+  const formulaEl = document.getElementById('formula-display');
+  const calcError = document.getElementById('calc-error');
+  const copyResultBtn = document.getElementById('copy-result');
+  const copyLinkBtn = document.getElementById('copy-link');
+
+  // Hydrate from URL params
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('spend')) spendEl.value = params.get('spend');
+  if (params.has('clicks')) clicksEl.value = params.get('clicks');
+  if (params.has('cpc')) cpcEl.value = params.get('cpc');
+  if (params.has('currency') && currencies[params.get('currency')]) {
+    currencyEl.value = params.get('currency');
+  }
+
+  function showErr(el, errEl, msg) {
+    el.classList.add('error');
+    errEl.textContent = msg;
+    errEl.classList.remove('hidden');
+  }
+
+  function clearErr(el, errEl) {
+    el.classList.remove('error');
+    errEl.classList.add('hidden');
+    errEl.textContent = '';
+  }
+
+  function getVal(el) {
+    const v = el.value.trim();
+    if (v === '') return null;
+    const n = parseFloat(v);
+    return isNaN(n) ? NaN : n;
+  }
+
+  function recalc() {
+    const curr = currencyEl.value;
+    const spendErr = document.getElementById('spend-error');
+    const clicksErr = document.getElementById('clicks-error');
+    const cpcErr = document.getElementById('cpc-error');
+
+    clearErr(spendEl, spendErr);
+    clearErr(clicksEl, clicksErr);
+    clearErr(cpcEl, cpcErr);
+    calcError.classList.add('hidden');
+
+    const s = getVal(spendEl);
+    const cl = getVal(clicksEl);
+    const cp = getVal(cpcEl);
+
+    const filled = [s, cl, cp].filter(v => v !== null);
+
+    // Need exactly 2 filled
+    if (filled.length < 2) {
+      resultCpc.textContent = '—';
+      resultSpend.textContent = '—';
+      resultClicks.textContent = '—';
+      formulaEl.textContent = '';
+      return;
+    }
+
+    // Validate non-null values
+    let valid = true;
+    if (s !== null) {
+      if (isNaN(s)) { showErr(spendEl, spendErr, 'Must be a valid number.'); valid = false; }
+      else if (s < 0) { showErr(spendEl, spendErr, 'Spend cannot be negative.'); valid = false; }
+    }
+    if (cl !== null) {
+      if (isNaN(cl)) { showErr(clicksEl, clicksErr, 'Must be a valid number.'); valid = false; }
+      else if (cl < 0) { showErr(clicksEl, clicksErr, 'Clicks cannot be negative.'); valid = false; }
+    }
+    if (cp !== null) {
+      if (isNaN(cp)) { showErr(cpcEl, cpcErr, 'Must be a valid number.'); valid = false; }
+      else if (cp < 0) { showErr(cpcEl, cpcErr, 'CPC cannot be negative.'); valid = false; }
+    }
+    if (!valid) return;
+
+    let cpcVal, spendVal, clicksVal, formula;
+
+    if (s !== null && cl !== null) {
+      // CPC = spend / clicks
+      if (cl === 0) { showErr(clicksEl, clicksErr, 'Clicks must be greater than zero.'); return; }
+      cpcVal = s / cl;
+      spendVal = s;
+      clicksVal = cl;
+      formula = `CPC = ${fmt(s, curr)} ÷ ${fmtN(cl)} = ${fmt(cpcVal, curr)}`;
+    } else if (s !== null && cp !== null) {
+      // clicks = spend / cpc
+      if (cp === 0) { showErr(cpcEl, cpcErr, 'CPC must be greater than zero.'); return; }
+      clicksVal = s / cp;
+      spendVal = s;
+      cpcVal = cp;
+      formula = `Clicks = ${fmt(s, curr)} ÷ ${fmt(cp, curr)} = ${fmtN(clicksVal, 1)}`;
+    } else if (cl !== null && cp !== null) {
+      // spend = clicks * cpc
+      spendVal = cl * cp;
+      clicksVal = cl;
+      cpcVal = cp;
+      formula = `Spend = ${fmtN(cl)} × ${fmt(cp, curr)} = ${fmt(spendVal, curr)}`;
+    }
+
+    resultCpc.textContent = fmt(cpcVal, curr);
+    resultSpend.textContent = fmt(spendVal, curr);
+    resultClicks.textContent = fmtN(clicksVal, 0);
+    formulaEl.textContent = formula;
+
+    // Update URL params silently
+    const p = new URLSearchParams();
+    if (spendEl.value) p.set('spend', spendEl.value);
+    if (clicksEl.value) p.set('clicks', clicksEl.value);
+    if (cpcEl.value) p.set('cpc', cpcEl.value);
+    p.set('currency', curr);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  [spendEl, clicksEl, cpcEl, currencyEl].forEach(el => el.addEventListener('input', recalc));
+
+  // Copy result
+  copyResultBtn.addEventListener('click', () => {
+    const text = `CPC: ${resultCpc.textContent} | Spend: ${resultSpend.textContent} | Clicks: ${resultClicks.textContent}`;
+    navigator.clipboard.writeText(text).then(() => {
+      copyResultBtn.textContent = 'Copied!';
+      setTimeout(() => { copyResultBtn.textContent = 'Copy Result'; }, 2000);
+    });
+  });
+
+  // Copy link
+  copyLinkBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      copyLinkBtn.textContent = 'Link copied!';
+      setTimeout(() => { copyLinkBtn.textContent = 'Copy link to this calculation'; }, 2000);
+    });
+  });
+
+  recalc();
+})();
+</script>

@@ -1,0 +1,2 @@
+# Placeholder — add publisher ID after AdSense approval
+# google.com, pub-XXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
