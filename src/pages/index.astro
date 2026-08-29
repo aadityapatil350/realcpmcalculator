@@ -34,7 +34,7 @@ const faqs = [
   },
   {
     q: "What is a good CPM?",
-    a: `CPM varies widely by ad format, channel, audience quality, and targeting specificity. Industry averages (2024): Google Display Network $2–$5; Meta Ads (Facebook/Instagram) $7–$14; LinkedIn Ads $26–$50; TikTok Ads $9–$10; YouTube Ads $4–$10; Amazon Ads $2–$9. Lower CPM is not always better — factor in audience quality and conversion rates. Sources: WordStream, Statista, platform-reported benchmarks (2024). Updated August 2026.`
+    a: `CPM varies widely by ad format, channel, audience quality, and targeting specificity. Typical ranges (2024): Google Display Network $0.50–$10; Meta Ads (Facebook/Instagram) $5–$25; LinkedIn Ads $20–$70; TikTok Ads $4–$15; YouTube Ads $3–$15; Amazon Ads $1–$9. Lower CPM is not always better — factor in audience quality and conversion rates. Sources: WordStream, Statista, platform-reported benchmarks. 2024 benchmark data, last reviewed August 2026.`
   },
   {
     q: "CPC vs CPM — which should I use?",
@@ -199,7 +199,21 @@ const faqSchema = {
           CPM = ($5,000 ÷ 250,000) × 1,000 = <strong>$20.00</strong>
         </p>
         <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
-          Calculating cost per impression (without the ×1,000) gives a very small number ($0.02), which is why the industry standardizes on per-thousand. The CPM calculation formula always multiplies by 1,000 at the end.
+          Calculating cost per impression (without the ×1,000) gives a very small number ($0.02), which is why the industry standardizes on per-thousand. This cost per thousand calculator always multiplies by 1,000 at the end — it's the same formula every ad platform uses to calculate the CPM you see in your dashboard.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Impression Calculator — Forecast Reach from Budget and CPM</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Use this CPM calc as an <strong>ad impression calculator</strong>: enter your planned spend and the expected CPM to calculate how many impressions your budget will deliver. This is the most common planning use case — you have a budget approved and need to forecast reach before the campaign goes live.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          <strong>Example:</strong> Budget = $8,000. Negotiated CPM = $16.<br/>
+          Impressions = ($8,000 ÷ $16) × 1,000 = <strong>500,000 impressions</strong>.
+        </p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
+          To figure out CPM from a completed campaign, reverse it: enter your actual spend and delivered impressions to calculate the effective CPM. Both directions use the same impressions calculator above — just leave the field you want to solve blank.
         </p>
       </section>
 
@@ -268,7 +282,7 @@ const faqSchema = {
             </tbody>
           </table>
         </div>
-        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: WordStream Display benchmarks; Statista Meta Ads data; LinkedIn Marketing Solutions; TikTok for Business; YouTube for Business; Amazon Advertising (2024). Updated August 2026.</p>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: WordStream Display benchmarks; Statista Meta Ads data; LinkedIn Marketing Solutions; TikTok for Business; YouTube for Business; Amazon Advertising (2024). 2024 benchmark data, last reviewed August 2026.</p>
       </section>
 
       <section>
