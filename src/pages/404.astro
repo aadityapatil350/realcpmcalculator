@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<BaseLayout
+  title="Page Not Found – RealCPMCalculator.com"
+  description="The page you're looking for doesn't exist. Find our free CPM, CPC, CTR, ROAS, CAC, and CPV calculators on the homepage."
+  canonical="https://realcpmcalculator.com/404"
+>
+  <SiteHeader />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
+    <p class="text-7xl font-bold text-[var(--color-accent)] mb-4">404</p>
+    <h1 class="text-2xl font-semibold text-[var(--color-text)] mb-3">Page not found</h1>
+    <p class="text-[var(--color-text-muted)] mb-8">
+      The URL you followed doesn't exist or has moved. Try one of the calculators below.
+    </p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm mb-10">
+      <a href="/" class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 hover:border-[var(--color-accent)] transition-colors no-underline text-[var(--color-text)]">CPM Calculator</a>
+      <a href="/cpc-calculator" class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 hover:border-[var(--color-accent)] transition-colors no-underline text-[var(--color-text)]">CPC Calculator</a>
+      <a href="/ctr-calculator" class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 hover:border-[var(--color-accent)] transition-colors no-underline text-[var(--color-text)]">CTR Calculator</a>
+      <a href="/roas-calculator" class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 hover:border-[var(--color-accent)] transition-colors no-underline text-[var(--color-text)]">ROAS Calculator</a>
+      <a href="/cac-calculator" class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 hover:border-[var(--color-accent)] transition-colors no-underline text-[var(--color-text)]">CAC Calculator</a>
+      <a href="/cpv-calculator" class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3 hover:border-[var(--color-accent)] transition-colors no-underline text-[var(--color-text)]">CPV Calculator</a>
+    </div>
+    <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[var(--color-accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity no-underline">
+      Back to homepage
+    </a>
+  </main>
+  <SiteFooter />
+</BaseLayout>
