@@ -11,12 +11,30 @@ const pageUrl = 'https://realcpmcalculator.com/roas-calculator';
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "ROAS Calculator",
+  "name": "ROAS Calculator – Return on Ad Spend & Break-Even ROAS",
   "url": pageUrl,
   "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Marketing Analytics",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "Calculate return on ad spend (ROAS), target ad spend, or revenue in any direction. Includes break-even ROAS calculator and channel benchmarks.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "3-way solving: calculate ROAS, revenue, or ad spend",
+    "Automated break-even ROAS calculation from gross margin",
+    "Profitability status readout (Profitable vs Unprofitable)",
+    "Multi-currency support (USD, EUR, GBP, INR, AUD, CAD)",
+    "Client-side processing with zero server tracking"
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://realcpmcalculator.com" },
+    { "@type": "ListItem", "position": 2, "name": "ROAS Calculator", "item": pageUrl }
+  ]
 };
 
 const faqs = [
@@ -46,6 +64,14 @@ const faqs = [
   {
     q: "ROAS vs ROI — what's the difference?",
     a: "ROAS measures revenue relative to ad spend only: Revenue ÷ Ad Spend. ROI measures net profit relative to total investment: (Revenue − Total Costs) ÷ Total Costs × 100%. ROAS ignores cost of goods, overhead, and non-ad costs, so a 5× ROAS campaign could still be unprofitable if margins are thin. Use ROAS for campaign-level optimization and ROI for business-level profitability."
+  },
+  {
+    q: "What is Marketing Efficiency Ratio (MER) vs ROAS?",
+    a: "MER (Marketing Efficiency Ratio, also known as Blended ROAS) divides total top-line revenue by total marketing spend across all ad channels. Unlike platform-reported ROAS—which often double-counts conversions when a customer clicks both a Facebook ad and a Google search ad—MER provides an un-siloed, macro view of overall marketing efficiency."
+  },
+  {
+    q: "What is Target ROAS (tROAS) bidding in Google Ads and Meta?",
+    a: "Target ROAS (tROAS) is an automated smart bidding strategy where ad network machine learning algorithms dynamically adjust bids in every individual auction to achieve your desired revenue return. If your target is 400% (4×), the platform bids aggressively on search queries and shoppers with high purchase intent while scaling down bids on low-converting users."
   }
 ];
 
@@ -61,9 +87,9 @@ const faqSchema = {
 ---
 <BaseLayout
   title="ROAS Calculator – Return on Ad Spend & Break-Even ROAS"
-  description="Free ROAS calculator — solve revenue, ad spend, or ROAS in any direction. Includes break-even ROAS mode: enter gross margin to find the minimum return needed."
+  description="Free online ROAS calculator. Solve revenue, ad spend, or target ROAS in any direction. Includes break-even ROAS calculation and e-commerce benchmarks."
   canonical={pageUrl}
-  schema={[webAppSchema, faqSchema]}
+  schema={[webAppSchema, breadcrumbSchema, faqSchema]}
 >
   <SiteHeader current="/roas-calculator" />
 

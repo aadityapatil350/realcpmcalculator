@@ -1,20 +1,52 @@
 ---
 const year = new Date().getFullYear();
 ---
-<footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)] mt-16">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <nav aria-label="Footer links">
-        <ul class="flex flex-wrap gap-4 list-none p-0 m-0 text-sm text-[var(--color-text-muted)]">
-          <li><a href="/about" class="hover:text-[var(--color-text)]">About</a></li>
-          <li><a href="/privacy" class="hover:text-[var(--color-text)]">Privacy</a></li>
-          <li><a href="/terms" class="hover:text-[var(--color-text)]">Terms</a></li>
-          <li><a href="/contact" class="hover:text-[var(--color-text)]">Contact</a></li>
-          <li><a href="/pto-accrual-calculator" class="hover:text-[var(--color-text)]">PTO Calculator</a></li>
+<footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)] mt-20">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 text-sm">
+      <div>
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Core Calculators</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)] list-none p-0 m-0">
+          <li><a href="/" class="hover:text-[var(--color-text)] transition-colors">CPM Calculator</a></li>
+          <li><a href="/cpc-calculator" class="hover:text-[var(--color-text)] transition-colors">CPC Calculator</a></li>
+          <li><a href="/ctr-calculator" class="hover:text-[var(--color-text)] transition-colors">CTR Calculator</a></li>
         </ul>
-      </nav>
-      <p class="text-sm text-[var(--color-text-subtle)]">
-        &copy; {year} RealCPMCalculator.com — All calculations run in your browser.
+      </div>
+
+      <div>
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Performance &amp; ROI</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)] list-none p-0 m-0">
+          <li><a href="/roas-calculator" class="hover:text-[var(--color-text)] transition-colors">ROAS Calculator</a></li>
+          <li><a href="/cac-calculator" class="hover:text-[var(--color-text)] transition-colors">CAC Calculator</a></li>
+          <li><a href="/cpv-calculator" class="hover:text-[var(--color-text)] transition-colors">CPV Calculator</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Company &amp; Legal</h3>
+        <ul class="space-y-2 text-[var(--color-text-muted)] list-none p-0 m-0">
+          <li><a href="/about" class="hover:text-[var(--color-text)] transition-colors">About Us</a></li>
+          <li><a href="/privacy" class="hover:text-[var(--color-text)] transition-colors">Privacy Policy</a></li>
+          <li><a href="/terms" class="hover:text-[var(--color-text)] transition-colors">Terms of Service</a></li>
+          <li><a href="/contact" class="hover:text-[var(--color-text)] transition-colors">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-text-subtle)] mb-3">Media Buying Math</h3>
+        <p class="text-xs text-[var(--color-text-muted)] leading-relaxed">
+          Standardized digital media planning calculators for ad buyers, PPC managers, and growth teams. Real-time client-side calculation with zero data storage.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-6 border-t border-[var(--color-border)]">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-xs text-[var(--color-text)]">RealCPMCalculator</span>
+        <span class="text-xs text-[var(--color-text-subtle)]">&copy; {year} RealCPMCalculator.com — Free Online Ad Math Tools.</span>
+      </div>
+      <p class="text-xs text-[var(--color-text-subtle)]">
+        All calculations run 100% locally in your browser. No ad spend or impression data is transmitted.
       </p>
     </div>
   </div>

@@ -4,11 +4,11 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const pageUrl = 'https://realcpmcalculator.com/privacy';
-const updated = 'August 29, 2026';
+const updated = 'September 23, 2026';
 ---
 <BaseLayout
   title="Privacy Policy – RealCPMCalculator.com"
-  description="Privacy policy for RealCPMCalculator.com. All calculations run in your browser — no input data is ever transmitted or stored."
+  description="Privacy policy for RealCPMCalculator.com. All media calculations run locally in your browser with zero server data collection or advertising tracking."
   canonical={pageUrl}
 >
   <SiteHeader />
@@ -19,54 +19,96 @@ const updated = 'August 29, 2026';
     <div class="space-y-8 text-[var(--color-text-muted)] leading-relaxed">
 
       <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Data We Do Not Collect</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">1. Overview and Core Privacy Commitment</h2>
         <p>
-          All calculations on RealCPMCalculator.com run entirely in your browser using JavaScript. <strong class="text-[var(--color-text)]">No numbers, inputs, or calculation results are ever sent to our servers, stored in a database, or shared with any third party.</strong> When you close the browser tab, your calculation is gone. We have no way to retrieve it because we never received it.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Cookies and Local Storage</h2>
-        <p>
-          We store one item in your browser's <code>localStorage</code>: your <strong>theme preference</strong> (light or dark mode). This value never leaves your device. We do not use cookies for tracking, analytics sessions, or user identification.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Google AdSense</h2>
-        <p>
-          This site displays advertisements served by Google AdSense. Google uses cookies, including the DoubleClick cookie (DART cookie), to serve ads based on your prior visits to this and other websites. You may opt out of the use of the DART cookie by visiting the <a href="https://www.google.com/settings/ads" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Google Ad Settings page</a>.
+          At RealCPMCalculator.com ("we", "us", or "our"), we believe your marketing financial figures, ad campaign budgets, CPC targets, conversion rates, and revenue margins are confidential business data. We are dedicated to providing free, transparent, and completely private digital marketing calculators.
         </p>
         <p class="mt-3">
-          Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visit to this site and/or other sites on the Internet. For more information about Google's privacy practices, see the <a href="https://policies.google.com/privacy" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Google Privacy Policy</a>.
+          This Privacy Policy explains our commitment to zero-server processing for calculation data, how client-side local storage is utilized, our cookie policies, and how third-party advertising partners like Google AdSense serve non-intrusive ads on this site.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Analytics</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">2. Zero-Server Processing: Data We Never Collect</h2>
         <p>
-          We use Google Analytics 4 (GA4) to understand aggregate traffic patterns such as which pages are visited and from which geographic regions. GA4 collects anonymized usage data. It does not receive any of the numbers you enter into our calculators. You can opt out of GA4 tracking using the <a href="https://tools.google.com/dlpage/gaoptout" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Google Analytics Opt-out Browser Add-on</a>.
+          All calculators on RealCPMCalculator.com—including the CPM Calculator, CPC Calculator, CTR Calculator, ROAS Calculator, CAC Calculator, and CPV Calculator—execute 100% locally in your web browser using client-side JavaScript.
+        </p>
+        <p class="mt-3">
+          <strong class="text-[var(--color-text)]">No ad spend, impression counts, click volumes, customer lifetime values, or calculated outputs are ever sent to our servers, stored in a database, or shared with third parties.</strong> When you perform a calculation, that mathematics occurs exclusively in your device's local memory. The moment you refresh or close your browser tab, your inputs and outputs are purged from RAM. We have no technical ability to access or reconstruct your media plans.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Children's Privacy</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">3. Local Storage and Browser Preferences</h2>
         <p>
-          This site is not directed at children under 13. We do not knowingly collect personal information from children under 13.
+          We do not require user account registration, login credentials, passwords, or personal email signups to use any of our calculators. To ensure a seamless user experience, our website may access your browser's native <code>localStorage</code> API strictly to store:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1">
+          <li><strong>Theme Preference:</strong> Remembers whether you prefer Dark Mode or Light Mode across browser sessions.</li>
+          <li><strong>Currency Preference:</strong> Remembers your last chosen currency symbol (e.g., USD, EUR, GBP).</li>
+        </ul>
+        <p class="mt-3">
+          These key-value pairs remain entirely on your device and are never transmitted over the internet to our origin infrastructure. You can clear your stored preferences anytime via your browser's clear site data settings.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Changes to This Policy</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">4. Google AdSense and DoubleClick Advertising Cookies</h2>
         <p>
-          We may update this policy occasionally. The "Last updated" date at the top reflects the most recent revision. Continued use of the site after changes constitutes acceptance of the updated policy.
+          To maintain free, open access to all our media calculators without subscription fees or paywalls, this site displays advertisements served by Google AdSense and certified third-party ad networks.
+        </p>
+        <p class="mt-3">
+          Google and its advertising partners use cookies, including the DoubleClick DART cookie, to serve ads based on prior visits to this website and other websites across the web. You may opt out of personalized advertising by visiting the <a href="https://adssettings.google.com/" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Google Ad Settings page</a>.
+        </p>
+        <p class="mt-3">
+          Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">www.aboutads.info</a> or the <a href="https://www.networkadvertising.org/choices/" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Network Advertising Initiative</a>. For comprehensive details on Google's privacy framework, please review the <a href="https://policies.google.com/technologies/ads" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Google Ads Privacy Policy</a>.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">Contact</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">5. Web Analytics and Aggregated Telemetry</h2>
         <p>
-          Questions about this policy? Email us at <a href="mailto:hello@realcpmcalculator.com" class="text-[var(--color-accent)]">hello@realcpmcalculator.com</a>.
+          We may use Google Analytics 4 (GA4) or privacy-preserving telemetry to understand aggregate site performance and traffic trends (such as page views, referring search terms, bounce rates, and device categories).
+        </p>
+        <p class="mt-3">
+          GA4 anonymizes IP addresses and collects non-personally identifiable metrics. GA4 never receives, observes, or logs any numerical values entered into our calculators. You can opt out of web analytics tracking across all sites by installing the <a href="https://tools.google.com/dlpage/gaoptout" class="text-[var(--color-accent)]" rel="noopener noreferrer" target="_blank">Google Analytics Opt-out Browser Add-on</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">6. GDPR and CCPA / CPRA Statutory Privacy Rights</h2>
+        <p>
+          Depending on your jurisdiction, you may hold statutory privacy rights under frameworks such as the European General Data Protection Regulation (GDPR) or California Consumer Privacy Act (CCPA/CPRA). These include:
+        </p>
+        <ul class="list-disc pl-5 mt-2 space-y-1">
+          <li><strong>Right to Access / Know:</strong> You may request disclosure of any personal information collected. (Because we collect zero personal records or calculation data, our stored database contains zero user profiles).</li>
+          <li><strong>Right to Deletion:</strong> You have the right to request deletion of personal information held by us. Because all calculations execute entirely in-browser, no persistent user records exist to delete.</li>
+          <li><strong>Right to Non-Discrimination:</strong> We do not discriminate against users who exercise privacy rights. All calculator tools remain 100% free and functional regardless of tracking choices.</li>
+          <li><strong>Right to Opt Out of Sale:</strong> We do not sell user personal data. Advertising partners may utilize cookie identifiers as outlined in Section 4 above.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">7. Children's Online Privacy (COPPA)</h2>
+        <p>
+          RealCPMCalculator.com is an educational and commercial media utility platform intended for digital advertisers, media buyers, agency planners, and business analysts. This site is not directed at children under the age of 13, and we do not knowingly collect personal information from minors under 13 in accordance with the Children's Online Privacy Protection Act (COPPA).
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">8. Changes to This Privacy Policy</h2>
+        <p>
+          We may update this policy periodically to reflect enhancements to our toolset or changes in statutory advertising standards. The "Last updated" date at the top of this document indicates when the latest revisions took effect. Continued use of RealCPMCalculator.com signifies your agreement to the current terms.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-[var(--color-text)] mb-3">9. Contact Us</h2>
+        <p>
+          If you have questions or regulatory inquiries regarding this Privacy Policy or our client-side processing architecture, please contact us by email:
+        </p>
+        <p class="mt-2 font-medium">
+          <a href="mailto:hello@realcpmcalculator.com" class="text-[var(--color-accent)]">hello@realcpmcalculator.com</a>
         </p>
       </section>
 

@@ -6,7 +6,16 @@ import AdSlot from '../components/AdSlot.astro';
 import FAQ from '../components/FAQ.astro';
 import RelatedTools from '../components/RelatedTools.astro';
 
-const pageUrl = 'https://realcpmcalculator.com/';
+const pageUrl = 'https://realcpmcalculator.com';
+
+const webSiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "RealCPMCalculator",
+  "url": "https://realcpmcalculator.com",
+  "description": "Free digital advertising calculators for CPM, CPC, CTR, ROAS, CAC, and CPV.",
+  "inLanguage": "en-US"
+};
 
 const webAppSchema = {
   "@context": "https://schema.org",
@@ -14,9 +23,19 @@ const webAppSchema = {
   "name": "CPM Calculator",
   "url": pageUrl,
   "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Advertising & Marketing",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "Calculate CPM (cost per mille), ad spend, and impressions in real time. Supports reverse calculations for campaign budget planning.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "Solve for CPM, spend, or impressions in any direction",
+    "Real-time calculations as you type",
+    "Currency switcher (USD, EUR, GBP, INR, AUD, CAD)",
+    "Secondary metric calculations (CPC, CTR, CPA, CVR)",
+    "Shareable calculation URLs",
+    "Zero client data stored or transmitted"
+  ]
 };
 
 const faqs = [
@@ -57,10 +76,10 @@ const faqSchema = {
 };
 ---
 <BaseLayout
-  title="CPM Calculator – Cost Per 1,000 Impressions, Free & Instant"
-  description="Free CPM calculator — solve spend, impressions, or CPM in any direction. Live results, shareable URLs, dark mode. The only CPM calculator that works both ways."
+  title="CPM Calculator – Free Cost Per Thousand Calculator"
+  description="Free online CPM calculator. Calculate cost per 1,000 impressions, campaign spend, or ad impressions in any direction with reverse CPM formulas and benchmarks."
   canonical={pageUrl}
-  schema={[webAppSchema, faqSchema]}
+  schema={[webSiteSchema, webAppSchema, faqSchema]}
 >
   <SiteHeader current="/" />
 

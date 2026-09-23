@@ -11,26 +11,56 @@ const pageUrl = 'https://realcpmcalculator.com/cpv-calculator';
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "CPV Calculator",
+  "name": "CPV Calculator – Cost Per View Video Ad Calculator",
   "url": pageUrl,
   "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Video Advertising Analytics",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "Calculate cost per view (CPV), video ad budget, and expected views across YouTube TrueView, TikTok, Meta, and CTV video campaigns.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "3-way solving: calculate CPV, total spend, or expected views",
+    "View-through rate (VTR) and completed view analysis",
+    "Multi-currency support (USD, EUR, GBP, INR, AUD, CAD)",
+    "Shareable calculation URL generator and one-click copy",
+    "Client-side processing with zero server tracking"
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://realcpmcalculator.com" },
+    { "@type": "ListItem", "position": 2, "name": "CPV Calculator", "item": pageUrl }
+  ]
 };
 
 const faqs = [
   {
     q: "How do you calculate cost per view?",
-    a: "CPV = Total Ad Spend ÷ Total Views. If you spent $1,000 and received 50,000 views, your CPV is $0.02. This calculator solves in any direction: enter spend and views to get CPV, or enter CPV and spend to forecast views, or enter views and CPV to find required budget."
+    a: "CPV = Total Ad Spend ÷ Total Views. If you spent $1,000 on a video campaign and generated 50,000 billable views, your CPV is $0.02. This calculator also solves in reverse: enter target CPV and budget to forecast views, or enter planned views and CPV to find required ad spend."
   },
   {
-    q: "What counts as a view on YouTube and Google Video ads?",
-    a: "As of August 2026, Google Ads counts a view for TrueView in-stream ads when a viewer watches 30 seconds of the video (or the full duration if shorter than 30 seconds), or interacts with your ad (clicking a CTA, for example). For bumper ads (6 seconds or less), views are counted as impressions, not watch-through views. Skippable and non-skippable in-stream ads have different billing thresholds — always verify the current definition in the Google Ads Help Center, as thresholds have changed historically. Source: Google Ads Help, updated 2024."
+    q: "What counts as a billable video view on YouTube?",
+    a: "In Google Ads for YouTube TrueView in-stream ads (skippable), a billable view occurs when a viewer watches at least 30 seconds of your video (or the entire duration if the video is shorter than 30 seconds), or when the user interacts with the ad (clicking a call-to-action overlay, card, or companion banner). If the viewer skips before 30 seconds without interacting, the advertiser pays $0.00."
   },
   {
     q: "CPV vs CPM for video campaigns — which should I use?",
-    a: "CPM (cost per thousand impressions) charges when the ad appears on screen, whether or not anyone watches it. CPV charges only when a viewer watches a defined portion of the video. CPV is better for brand storytelling campaigns where engagement depth matters — you only pay for people who actually watched. CPM is better for reach maximization across high-frequency placements. YouTube TrueView defaults to CPV bidding; YouTube non-skippable and bumper ads are typically bought on CPM."
+    a: "CPM (cost per thousand impressions) charges whenever your video appears on screen, regardless of whether viewers watch or immediately skip. CPV charges only when a viewer watches past the qualification threshold. CPV is ideal for brand storytelling, consideration, and message retention where engagement depth matters. CPM is preferable for mass reach and high-frequency non-skippable bumper ads."
+  },
+  {
+    q: "What is View-Through Rate (VTR) and how does it relate to CPV?",
+    a: "View-Through Rate (VTR) equals Total Views divided by Total Impressions, expressed as a percentage. It measures the proportion of people who chose to watch your video rather than skipping. Higher VTR signals engaging creative; on YouTube, higher VTR boosts your ad auction Quality Score, which directly lowers your winning CPV bids."
+  },
+  {
+    q: "What is the difference between CPV and CPCV (Cost Per Completed View)?",
+    a: "CPV measures views that meet the platform's qualifying threshold (e.g., 30 seconds on YouTube, or 2 seconds on Meta/TikTok). CPCV measures only viewers who watched 100% of the entire video through to the final frame. CPCV is calculated as Total Ad Spend ÷ 100% Completed Views, and is always higher than standard CPV."
+  },
+  {
+    q: "How can advertisers lower their CPV on YouTube and TikTok?",
+    a: "To reduce video CPV: 1) Hook viewers within the first 5 seconds to reduce immediate drop-off before quality scores are scored; 2) Test multiple creative variants and thumbnails; 3) Refine demographic and placement exclusions to eliminate low-intent channels; 4) Use frequency capping to avoid over-serving viewers who consistently skip; and 5) Transition from manual CPV bidding to Target CPV bidding with automated smart bidding algorithms."
   }
 ];
 
@@ -45,17 +75,17 @@ const faqSchema = {
 };
 ---
 <BaseLayout
-  title="CPV Calculator – Cost Per View for Video Ads, Solve Any Field"
-  description="Free CPV calculator — calculate cost per view, total ad spend, or expected views instantly. Includes YouTube view definition and CPV vs CPM comparison."
+  title="CPV Calculator – Cost Per View Video Ad Calculator"
+  description="Free online CPV calculator. Calculate cost per view, total ad spend, and expected video views across YouTube, Meta, TikTok, and CTV platforms."
   canonical={pageUrl}
-  schema={[webAppSchema, faqSchema]}
+  schema={[webAppSchema, breadcrumbSchema, faqSchema]}
 >
   <SiteHeader current="/cpv-calculator" />
   <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
     <h1 class="text-3xl sm:text-4xl font-bold text-[var(--color-text)] mb-2">CPV Calculator</h1>
     <p class="text-[var(--color-text-muted)] mb-8">
-      Calculate cost per view for video ad campaigns. Enter any two fields to solve the third. Works for YouTube TrueView, Facebook Video, and any platform using CPV billing.
+      Calculate cost per view (CPV), video ad spend, or expected views — in any direction. Enter any two fields to instantly solve the third.
     </p>
 
     <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-sm">
@@ -72,39 +102,31 @@ const faqSchema = {
         </select>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div>
-          <label for="spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">Ad Spend</label>
+          <label for="spend" class="block text-sm font-medium text-[var(--color-text)] mb-1">Total Spend</label>
           <input type="number" id="spend" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000" value="1000" aria-describedby="spend-error" />
           <p id="spend-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
         </div>
         <div>
-          <label for="views" class="block text-sm font-medium text-[var(--color-text)] mb-1">Views</label>
-          <input type="number" id="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 50000" value="50000" aria-describedby="views-error" />
+          <label for="views" class="block text-sm font-medium text-[var(--color-text)] mb-1">Total Views</label>
+          <input type="number" id="views" inputmode="decimal" min="1" step="any" placeholder="e.g. 50000" value="50000" aria-describedby="views-error" />
           <p id="views-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
         </div>
         <div>
-          <label for="cpv" class="block text-sm font-medium text-[var(--color-text)] mb-1">CPV</label>
-          <input type="number" id="cpv" inputmode="decimal" min="0" step="any" placeholder="calculated" aria-describedby="cpv-error" />
+          <label for="cpv" class="block text-sm font-medium text-[var(--color-text)] mb-1">CPV (Cost Per View)</label>
+          <input type="number" id="cpv" inputmode="decimal" min="0" step="any" placeholder="e.g. 0.02" aria-describedby="cpv-error" />
           <p id="cpv-error" class="mt-1 text-xs text-[var(--color-error)] hidden" role="alert"></p>
         </div>
       </div>
 
       <div id="results" class="rounded-lg bg-[var(--color-result-bg)] border border-[var(--color-result-border)] p-5 space-y-3">
         <div class="flex justify-between items-center">
-          <span class="text-sm font-medium text-[var(--color-text)]">CPV (Cost per View)</span>
-          <span id="result-cpv" class="text-2xl font-bold text-[var(--color-accent)]">$0.02</span>
-        </div>
-        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
-          <span class="text-sm text-[var(--color-text-muted)]">Ad Spend</span>
-          <span id="result-spend" class="text-sm font-medium text-[var(--color-text)]">$1,000.00</span>
-        </div>
-        <div class="flex justify-between items-center border-t border-[var(--color-result-border)] pt-3">
-          <span class="text-sm text-[var(--color-text-muted)]">Views</span>
-          <span id="result-views" class="text-sm font-medium text-[var(--color-text)]">50,000</span>
+          <span class="text-sm font-medium text-[var(--color-text)]" id="result-label">Cost Per View (CPV)</span>
+          <span id="result-value" class="text-2xl font-bold text-[var(--color-accent)]">$0.02</span>
         </div>
         <div class="border-t border-[var(--color-result-border)] pt-3">
-          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display">CPV = $1,000 ÷ 50,000 = $0.02</p>
+          <p class="text-xs text-[var(--color-text-muted)] font-mono" id="formula-display">CPV = $1,000.00 ÷ 50,000 = $0.02</p>
         </div>
       </div>
 
@@ -116,80 +138,123 @@ const faqSchema = {
 
     <AdSlot size="leaderboard" />
 
-    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+    <article class="mt-8 space-y-8 text-[var(--color-text)] leading-relaxed">
 
       <section>
         <h2 class="text-2xl font-semibold mb-3">How to Use This CPV Calculator</h2>
         <p class="text-[var(--color-text-muted)] leading-relaxed">
-          Enter any two of <strong>Ad Spend</strong>, <strong>Views</strong>, and <strong>CPV</strong>. The third calculates instantly.
+          This calculator operates bidirectionally. Leave the field you want to calculate blank, or type into any two fields to solve the third:
         </p>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3"><strong>Example:</strong> Spent $1,000, received 50,000 views → CPV = $0.02.</p>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3"><strong>Budget planning:</strong> Target CPV = $0.03, budget = $5,000 → Expected views = 166,667.</p>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-semibold mb-3">The CPV Formula Explained</h2>
-        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
-          CPV = Total Ad Spend ÷ Total Views
-        </div>
-        <p class="text-[var(--color-text-muted)] leading-relaxed">CPV is the standard metric for video campaigns bought on a per-view basis. It answers: "How much does it cost to get one person to watch my video?"</p>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-semibold mb-3">What Counts as a View? YouTube Definition (August 2026)</h2>
-        <p class="text-[var(--color-text-muted)] leading-relaxed">
-          For YouTube TrueView in-stream ads (skippable), Google Ads counts a billable view when:
-        </p>
-        <ul class="mt-3 space-y-2 text-[var(--color-text-muted)] list-disc list-inside">
-          <li>The viewer watches <strong>30 seconds</strong> of the ad (or the full duration if the ad is shorter than 30 seconds), <strong>or</strong></li>
-          <li>The viewer interacts with the ad (clicks a CTA overlay, companion banner, or card).</li>
+        <ul class="list-disc pl-5 mt-3 space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Find CPV:</strong> Enter your total budget spend and total delivered video views. (e.g., $1,000 spend &divide; 50,000 views = <strong>$0.02 CPV</strong>).</li>
+          <li><strong>Forecast Video Views:</strong> Enter planned campaign spend and target CPV to calculate expected reach. (e.g., $5,000 spend &divide; $0.03 CPV = <strong>166,667 views</strong>).</li>
+          <li><strong>Calculate Required Budget:</strong> Enter your target view count and expected platform CPV to find the necessary budget allocation.</li>
         </ul>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
-          For <strong>bumper ads</strong> (6 seconds, non-skippable), Google charges on a CPM basis, not CPV — views equal impressions.
-        </p>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
-          For <strong>non-skippable in-stream ads</strong> (15 seconds), billing is typically CPM. The CPV metric is most relevant to TrueView (skippable) campaigns.
-        </p>
-        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Source: Google Ads Help Center, Video ads formats and billing. Verified August 2026. Google has changed view-counting thresholds historically — check the Help Center for the current definition before launching a campaign.</p>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">What Is a Good CPV? Benchmarks by Channel</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm border-collapse">
-            <thead><tr class="bg-[var(--color-bg-subtle)]">
-              <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Platform / Format</th>
-              <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Avg. CPV (USD)</th>
-            </tr></thead>
-            <tbody>
-              <tr><td class="p-3 border border-[var(--color-border)]">YouTube TrueView (skippable)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.010–$0.030</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">YouTube (non-skippable, CPM equiv.)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.003–$0.010</td></tr>
-              <tr><td class="p-3 border border-[var(--color-border)]">Meta Ads (Facebook/Instagram Video)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.01–$0.05</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">TikTok In-Feed Video</td><td class="text-right p-3 border border-[var(--color-border)]">$0.02–$0.10</td></tr>
-              <tr><td class="p-3 border border-[var(--color-border)]">Connected TV (CTV)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.02–$0.20</td></tr>
-            </tbody>
-          </table>
+        <h2 class="text-2xl font-semibold mb-3">The CPV Formula &amp; Math Explained</h2>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
+          CPV = Total Ad Spend &divide; Total Billable Views
         </div>
-        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: Google Ads benchmark data; Meta Ads industry reports; TikTok for Business; CTV industry averages via IAB (2024). Updated August 2026. CPV ranges vary by audience targeting, creative length, and bid strategy.</p>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Unlike CPM (which bills in 1,000-impression bundles), CPV is evaluated on an individual view basis. Because individual view costs are modest (typically 1 to 5 cents), the metric is expressed as fractional currency units ($0.025 or &pound;0.018).
+        </p>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-3 font-mono text-xs my-3">
+          Required Budget = Target Views &times; Maximum CPV Bid
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          When configuring video ad auctions on Google Ads or TikTok, setting your Max CPV bid tells the auction the highest amount you are willing to pay for a qualified view. In second-price auctions, your actual billed CPV will frequently clear below your maximum bid ceiling.
+        </p>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">CPV vs CPM for Video Campaigns</h2>
+        <h2 class="text-2xl font-semibold mb-3">What Counts as a View? Platform Differences</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          Not all video views are created equal. Cross-platform comparisons must account for divergent billing triggers:
+        </p>
         <div class="overflow-x-auto">
           <table class="w-full text-sm border-collapse">
-            <thead><tr class="bg-[var(--color-bg-subtle)]">
-              <th class="text-left p-3 border border-[var(--color-border)] font-semibold"></th>
-              <th class="text-left p-3 border border-[var(--color-border)] font-semibold">CPV</th>
-              <th class="text-left p-3 border border-[var(--color-border)] font-semibold">CPM</th>
-            </tr></thead>
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Ad Platform</th>
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Format</th>
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Billable View Qualification Trigger</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td class="p-3 border border-[var(--color-border)] font-medium">You pay for</td><td class="p-3 border border-[var(--color-border)]">Completed/partial views</td><td class="p-3 border border-[var(--color-border)]">Ad appearances</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)] font-medium">Best for</td><td class="p-3 border border-[var(--color-border)]">Storytelling, brand awareness with engagement</td><td class="p-3 border border-[var(--color-border)]">Maximum reach, frequency</td></tr>
-              <tr><td class="p-3 border border-[var(--color-border)] font-medium">Risk</td><td class="p-3 border border-[var(--color-border)]">Fewer total impressions for same budget</td><td class="p-3 border border-[var(--color-border)]">Paying for unengaged viewers</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)] font-medium">YouTube format</td><td class="p-3 border border-[var(--color-border)]">TrueView (skippable)</td><td class="p-3 border border-[var(--color-border)]">Bumper, non-skippable</td></tr>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)] font-medium">YouTube (Google Ads)</td>
+                <td class="p-3 border border-[var(--color-border)]">TrueView In-Stream</td>
+                <td class="p-3 border border-[var(--color-border)]">30 seconds (or complete video if &lt;30s), or click interaction</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)] font-medium">Meta (Facebook/Instagram)</td>
+                <td class="p-3 border border-[var(--color-border)]">ThruPlay</td>
+                <td class="p-3 border border-[var(--color-border)]">15 seconds continuous watch time (or full video if &lt;15s)</td>
+              </tr>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)] font-medium">TikTok Ads</td>
+                <td class="p-3 border border-[var(--color-border)]">In-Feed Video</td>
+                <td class="p-3 border border-[var(--color-border)]">2-second or 6-second focused view, or click engagement</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)] font-medium">Connected TV (CTV)</td>
+                <td class="p-3 border border-[var(--color-border)]">Non-skippable</td>
+                <td class="p-3 border border-[var(--color-border)]">Billed primarily on CPM basis with 90%+ completion rates</td>
+              </tr>
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">View-Through Rate (VTR) &amp; Completion Rates</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          <strong>View-Through Rate (VTR)</strong> measures creative stickiness and audience alignment. It answers what fraction of ad impressions resulted in a full qualified view:
+        </p>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-3 font-mono text-xs my-3">
+          VTR = (Total Qualified Views &divide; Total Ad Impressions) &times; 100%
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Standard YouTube TrueView campaigns average a 25% to 35% VTR. A video creative achieving a 45% VTR signals strong audience relevance. Because ad networks reward engaging video creatives that viewers do not skip, higher VTR directly lowers your effective clearing CPV.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">CPV vs CPCV: Understanding Completed Views</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          While CPV bills as soon as the viewer reaches the 30-second mark, <strong>Cost Per Completed View (CPCV)</strong> evaluates the cost of holding a viewer's attention through 100% of the entire message:
+        </p>
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-3 font-mono text-xs my-3">
+          CPCV = Total Campaign Spend &divide; 100% Completed Video Views
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          If you run a 60-second product demo with a $1,000 spend, yielding 50,000 30-second views ($0.02 CPV) but only 10,000 viewers finish the full 60 seconds, your CPCV is $1,000 &divide; 10,000 = $0.10. Both metrics are valuable: CPV measures introductory reach, while CPCV measures deep narrative retention.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Industry Benchmarks: Average CPV by Channel (2024–2026)</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Video Platform / Format</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Avg. CPV (USD)</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Typical VTR Range</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)]">YouTube TrueView (skippable)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.012–$0.035</td><td class="text-right p-3 border border-[var(--color-border)]">25%–40%</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Meta Ads (ThruPlay)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.015–$0.050</td><td class="text-right p-3 border border-[var(--color-border)]">15%–30%</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">TikTok In-Feed Video</td><td class="text-right p-3 border border-[var(--color-border)]">$0.018–$0.060</td><td class="text-right p-3 border border-[var(--color-border)]">18%–32%</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">LinkedIn Video Ads</td><td class="text-right p-3 border border-[var(--color-border)]">$0.060–$0.150</td><td class="text-right p-3 border border-[var(--color-border)]">20%–35%</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Connected TV (CTV / OTT)</td><td class="text-right p-3 border border-[var(--color-border)]">$0.025–$0.080</td><td class="text-right p-3 border border-[var(--color-border)]">90%–98%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: Google Ads benchmarks; Meta Business Insights; IAB Video Ad Spend Report (2024). Updated August 2026.</p>
       </section>
 
     </article>
@@ -208,8 +273,7 @@ const faqSchema = {
     GBP: { locale: 'en-GB', currency: 'GBP' }, INR: { locale: 'en-IN', currency: 'INR' },
     AUD: { locale: 'en-AU', currency: 'AUD' }, CAD: { locale: 'en-CA', currency: 'CAD' },
   };
-  function fmt(v, k, d = 4) { const c = currencies[k]||currencies.USD; return new Intl.NumberFormat(c.locale,{style:'currency',currency:c.currency,minimumFractionDigits:d,maximumFractionDigits:d}).format(v); }
-  function fmt2(v, k) { const c = currencies[k]||currencies.USD; return new Intl.NumberFormat(c.locale,{style:'currency',currency:c.currency,minimumFractionDigits:2,maximumFractionDigits:2}).format(v); }
+  function fmt(v, k, d = 2) { const c = currencies[k]||currencies.USD; return new Intl.NumberFormat(c.locale,{style:'currency',currency:c.currency,minimumFractionDigits:d,maximumFractionDigits:d}).format(v); }
   function fmtN(v, d = 0) { return new Intl.NumberFormat('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v); }
 
   const spendEl = document.getElementById('spend');
@@ -229,59 +293,70 @@ const faqSchema = {
 
   function recalc() {
     const curr = currEl.value;
-    const spErr = document.getElementById('spend-error');
-    const vwErr = document.getElementById('views-error');
-    const cpErr = document.getElementById('cpv-error');
-    clearErr(spendEl, spErr); clearErr(viewsEl, vwErr); clearErr(cpvEl, cpErr);
+    clearErr(spendEl, document.getElementById('spend-error'));
+    clearErr(viewsEl, document.getElementById('views-error'));
+    clearErr(cpvEl, document.getElementById('cpv-error'));
 
-    const s = getVal(spendEl); const v = getVal(viewsEl); const cp = getVal(cpvEl);
+    const s = getVal(spendEl); const v = getVal(viewsEl); const c = getVal(cpvEl);
+
     let valid = true;
-    if (s !== null) { if (isNaN(s)||s<0) { showErr(spendEl, spErr, 'Must be non-negative.'); valid = false; } }
-    if (v !== null) { if (isNaN(v)||v<0) { showErr(viewsEl, vwErr, 'Must be non-negative.'); valid = false; } }
-    if (cp !== null) { if (isNaN(cp)||cp<0) { showErr(cpvEl, cpErr, 'Must be non-negative.'); valid = false; } }
+    if (s !== null) { if (isNaN(s)||s<0) { showErr(spendEl, document.getElementById('spend-error'), 'Must be a non-negative number.'); valid = false; } }
+    if (v !== null) { if (isNaN(v)||v<=0) { showErr(viewsEl, document.getElementById('views-error'), 'Must be greater than zero.'); valid = false; } }
+    if (c !== null) { if (isNaN(c)||c<0) { showErr(cpvEl, document.getElementById('cpv-error'), 'Must be a non-negative number.'); valid = false; } }
     if (!valid) return;
 
-    const filled = [s, v, cp].filter(x => x !== null);
-    if (filled.length < 2) { document.getElementById('result-cpv').textContent='—'; document.getElementById('result-spend').textContent='—'; document.getElementById('result-views').textContent='—'; document.getElementById('formula-display').textContent=''; return; }
-
-    let cpvVal, spVal, vwVal, formula;
-
-    if (s !== null && v !== null) {
-      if (v === 0) { showErr(viewsEl, vwErr, 'Views must be greater than zero.'); return; }
-      cpvVal = s / v; spVal = s; vwVal = v;
-      formula = `CPV = ${fmt2(s,curr)} ÷ ${fmtN(v)} = ${fmt(cpvVal,curr)}`;
-    } else if (s !== null && cp !== null) {
-      if (cp === 0) { showErr(cpvEl, cpErr, 'CPV must be greater than zero.'); return; }
-      vwVal = s / cp; spVal = s; cpvVal = cp;
-      formula = `Views = ${fmt2(s,curr)} ÷ ${fmt(cp,curr)} = ${fmtN(vwVal)}`;
-    } else {
-      spVal = v * cp; vwVal = v; cpvVal = cp;
-      formula = `Spend = ${fmtN(v)} × ${fmt(cp,curr)} = ${fmt2(spVal,curr)}`;
+    const count = [s, v, c].filter(x => x !== null).length;
+    if (count < 2) {
+      document.getElementById('result-label').textContent = 'Result';
+      document.getElementById('result-value').textContent = '—';
+      document.getElementById('formula-display').textContent = 'Enter any two fields to calculate the third.';
+      return;
     }
 
-    document.getElementById('result-cpv').textContent = fmt(cpvVal, curr);
-    document.getElementById('result-spend').textContent = fmt2(spVal, curr);
-    document.getElementById('result-views').textContent = fmtN(vwVal);
-    document.getElementById('formula-display').textContent = formula;
-
-    const p = new URLSearchParams();
-    if (spendEl.value) p.set('spend', spendEl.value);
-    if (viewsEl.value) p.set('views', viewsEl.value);
-    if (cpvEl.value) p.set('cpv', cpvEl.value);
-    p.set('currency', curr);
-    history.replaceState(null, '', '?' + p.toString());
+    if (s !== null && v !== null) {
+      const calcCpv = s / v;
+      document.getElementById('result-label').textContent = 'Cost Per View (CPV)';
+      document.getElementById('result-value').textContent = fmt(calcCpv, curr, 3);
+      document.getElementById('formula-display').textContent = `CPV = ${fmt(s, curr)} ÷ ${fmtN(v)} = ${fmt(calcCpv, curr, 3)}`;
+    } else if (s !== null && c !== null) {
+      if (c === 0) { document.getElementById('result-value').textContent = '—'; return; }
+      const calcViews = Math.round(s / c);
+      document.getElementById('result-label').textContent = 'Expected Views';
+      document.getElementById('result-value').textContent = fmtN(calcViews);
+      document.getElementById('formula-display').textContent = `Views = ${fmt(s, curr)} ÷ ${fmt(c, curr, 3)} = ${fmtN(calcViews)}`;
+    } else if (v !== null && c !== null) {
+      const calcSpend = v * c;
+      document.getElementById('result-label').textContent = 'Total Spend';
+      document.getElementById('result-value').textContent = fmt(calcSpend, curr);
+      document.getElementById('formula-display').textContent = `Spend = ${fmtN(v)} × ${fmt(c, curr, 3)} = ${fmt(calcSpend, curr)}`;
+    }
   }
 
-  [spendEl, viewsEl, cpvEl, currEl].forEach(el => el.addEventListener('input', recalc));
-
-  document.getElementById('copy-result').addEventListener('click', function() {
-    const text = `CPV: ${document.getElementById('result-cpv').textContent} | Spend: ${document.getElementById('result-spend').textContent} | Views: ${document.getElementById('result-views').textContent}`;
-    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
-  });
-  document.getElementById('copy-link').addEventListener('click', function() {
-    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
-  });
-
+  [spendEl, viewsEl, cpvEl].forEach(el => el.addEventListener('input', recalc));
+  currEl.addEventListener('change', recalc);
   recalc();
+
+  document.getElementById('copy-result').addEventListener('click', () => {
+    const label = document.getElementById('result-label').textContent;
+    const val = document.getElementById('result-value').textContent;
+    navigator.clipboard.writeText(`${label}: ${val}`).then(() => {
+      const btn = document.getElementById('copy-result');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000);
+    });
+  });
+
+  document.getElementById('copy-link').addEventListener('click', () => {
+    const url = new URL(window.location.href);
+    if (spendEl.value) url.searchParams.set('spend', spendEl.value);
+    if (viewsEl.value) url.searchParams.set('views', viewsEl.value);
+    if (cpvEl.value) url.searchParams.set('cpv', cpvEl.value);
+    url.searchParams.set('currency', currEl.value);
+    navigator.clipboard.writeText(url.toString()).then(() => {
+      const btn = document.getElementById('copy-link');
+      btn.textContent = 'Link Copied!';
+      setTimeout(() => { btn.textContent = 'Copy link to this calculation'; }, 2000);
+    });
+  });
 })();
 </script>

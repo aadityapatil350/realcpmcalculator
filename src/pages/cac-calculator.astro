@@ -11,26 +11,57 @@ const pageUrl = 'https://realcpmcalculator.com/cac-calculator';
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "CAC Calculator",
+  "name": "CAC Calculator – Customer Acquisition Cost & LTV Ratio",
   "url": pageUrl,
   "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Marketing & Financial Analytics",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "Calculate customer acquisition cost (CAC) and LTV:CAC ratio instantly from sales and marketing expenses with industry benchmark analysis.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "Combined sales and marketing spend inputs",
+    "Instant CAC calculation with formula readout",
+    "Customer lifetime value (LTV) input with automated LTV:CAC ratio evaluation",
+    "Interactive multi-currency selector (USD, EUR, GBP, INR, AUD, CAD)",
+    "Shareable calculation link generator and clipboard copy",
+    "Client-side processing with zero server tracking"
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://realcpmcalculator.com" },
+    { "@type": "ListItem", "position": 2, "name": "CAC Calculator", "item": pageUrl }
+  ]
 };
 
 const faqs = [
   {
     q: "How do you calculate customer acquisition cost?",
-    a: "CAC = (Total Sales Spend + Total Marketing Spend) ÷ New Customers Acquired. For example, $10,000 in sales costs and $20,000 in marketing costs that produced 300 new customers gives a CAC of $100. Only include new customers, not returning customers or renewals."
+    a: "CAC = (Total Sales Spend + Total Marketing Spend) ÷ New Customers Acquired. For example, if your company spent $10,000 on sales and $20,000 on marketing during a quarter and gained 300 new customers, your CAC is ($10,000 + $20,000) ÷ 300 = $100.00. Only count brand-new acquired customers; do not count renewals, upgrades, or returning customers."
   },
   {
     q: "What is a good CAC?",
-    a: "CAC benchmarks vary widely by industry. SaaS companies typically target $100–$500 CAC for SMB products and $5,000–$50,000+ for enterprise. E-commerce typically sees $10–$100 CAC. The only meaningful benchmark is your LTV:CAC ratio — a CAC is 'good' if your customer lifetime value is at least 3× higher."
+    a: "A 'good' CAC is entirely relative to your Customer Lifetime Value (LTV) and gross margins. A $500 CAC is unsustainable for an e-commerce store with an average $80 basket, but world-class for an enterprise B2B SaaS platform charging $40,000 annually. As a rule of thumb, healthy business unit economics require an LTV at least 3× your CAC."
   },
   {
     q: "What is a good LTV to CAC ratio?",
-    a: "The industry standard target for SaaS and subscription businesses is an LTV:CAC ratio of 3:1 or higher. Below 3:1 suggests the business is spending too much to acquire customers relative to their value. Above 5:1 may indicate underinvestment in growth. For e-commerce, ratios vary by purchase frequency and margin — the same 3× rule of thumb applies as a starting baseline."
+    a: "The standard gold benchmark for subscription, SaaS, and recurring revenue businesses is an LTV:CAC ratio of 3:1 or higher. A ratio under 2:1 indicates your acquisition costs are eating up your operating margins. A ratio over 5:1 typically indicates you are underinvesting in marketing and leaving market share on the table to competitors."
+  },
+  {
+    q: "What is the difference between blended CAC and paid CAC?",
+    a: "Blended CAC divides total marketing and sales expenses by ALL new customers acquired across both organic and paid channels. Paid CAC divides paid advertising spend solely by new customers acquired directly from paid ad campaigns. Relying exclusively on blended CAC can mask unprofitable paid advertising channels because organic and word-of-mouth growth artificially inflates the customer denominator."
+  },
+  {
+    q: "What expense items should be included in CAC?",
+    a: "A true, comprehensive CAC includes: paid media ad spend, marketing agency fees, sales and marketing salaries, sales commissions, creative production expenses, marketing software tools (CRM, email platforms, attribution software), and onboarding collateral. Do not include customer success or account management costs dedicated to retaining existing accounts."
+  },
+  {
+    q: "How can a business lower its customer acquisition cost?",
+    a: "To reduce CAC: 1) Improve conversion rates across landing pages and sales funnels; 2) Increase organic traffic through SEO and content marketing; 3) Retarget high-intent website visitors instead of only funding cold prospect acquisition; 4) Launch customer referral and advocacy programs; and 5) Prune non-converting keywords and ad placements in paid ad networks."
   }
 ];
 
@@ -45,10 +76,10 @@ const faqSchema = {
 };
 ---
 <BaseLayout
-  title="CAC Calculator – Customer Acquisition Cost & LTV:CAC Ratio"
-  description="Free CAC calculator — calculate customer acquisition cost and LTV:CAC ratio. Includes sales and marketing spend inputs with benchmark guidance."
+  title="CAC Calculator – Customer Acquisition Cost & LTV Ratio"
+  description="Free CAC calculator. Calculate customer acquisition cost and LTV:CAC ratio instantly from sales and marketing spend with industry benchmarks."
   canonical={pageUrl}
-  schema={[webAppSchema, faqSchema]}
+  schema={[webAppSchema, breadcrumbSchema, faqSchema]}
 >
   <SiteHeader current="/cac-calculator" />
   <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
@@ -124,60 +155,122 @@ const faqSchema = {
 
     <AdSlot size="leaderboard" />
 
-    <article class="mt-8 space-y-8 text-[var(--color-text)]">
+    <article class="mt-8 space-y-8 text-[var(--color-text)] leading-relaxed">
 
       <section>
         <h2 class="text-2xl font-semibold mb-3">How to Use This Customer Acquisition Cost Calculator</h2>
-        <p class="text-[var(--color-text-muted)] leading-relaxed">
-          Enter your sales spend, marketing spend, and new customers acquired. CAC calculates instantly. Optionally add customer LTV to see your LTV:CAC ratio.
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-4">
+          Customer Acquisition Cost (CAC) is the most critical metric for evaluating the sustainability and scalability of your customer growth engine. This calculator computes your true CAC in real time, breaks down your combined sales and marketing expenditures, and tests your unit economics against your average Customer Lifetime Value (LTV).
         </p>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
-          <strong>Example:</strong> Sales team cost = $10,000. Marketing budget = $20,000. New customers = 300.<br/>
-          CAC = ($10,000 + $20,000) ÷ 300 = <strong>$100</strong>
-        </p>
+        <ol class="list-decimal pl-5 space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Input Total Sales Spend:</strong> Enter all costs related to closing new accounts, including sales representative salaries, commissions, demo software licenses, and travel.</li>
+          <li><strong>Input Total Marketing Spend:</strong> Enter paid media spend, creative production costs, agency retainers, and marketing automation software subscriptions.</li>
+          <li><strong>Enter New Customers Acquired:</strong> Specify only newly converted first-time purchasing customers during the exact corresponding measurement window.</li>
+          <li><strong>Add Customer Lifetime Value (Optional):</strong> Enter your estimated average gross margin lifetime value per customer to immediately calculate and evaluate your LTV:CAC health ratio.</li>
+        </ol>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">The CAC Formula Explained</h2>
+        <h2 class="text-2xl font-semibold mb-3">The CAC Formula &amp; Calculation Methodology</h2>
         <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-4 font-mono text-sm mb-4">
-          CAC = (Sales Spend + Marketing Spend) ÷ New Customers Acquired
+          CAC = (Total Sales Spend + Total Marketing Spend) &divide; New Customers Acquired
         </div>
         <p class="text-[var(--color-text-muted)] leading-relaxed">
-          Include all costs directly related to customer acquisition: ad spend, sales salaries and commissions, agency fees, tools, events. Exclude costs of serving existing customers.
+          <strong>Step-by-Step Practical Calculation:</strong> Suppose an online B2B software vendor spends $15,000 on Google Search Ads, $5,000 on LinkedIn campaigns, and pays $10,000 in sales rep compensation during one quarter. The total customer acquisition expenditure equals $30,000. If those campaigns generated 150 brand-new paying business accounts, the CAC calculation is:
         </p>
-        <p class="text-[var(--color-text-muted)] leading-relaxed mt-3">
-          <strong>LTV:CAC Ratio</strong> = Customer Lifetime Value ÷ CAC. A ratio of 3:1 or higher is the industry benchmark for sustainable growth.
+        <div class="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-3 font-mono text-xs my-3">
+          CAC = ($10,000 sales + $20,000 marketing) &divide; 150 accounts = $200.00 per customer
+        </div>
+        <p class="text-[var(--color-text-muted)] leading-relaxed">
+          Accurate CAC measurement requires time-lag awareness. If your average sales cycle is 60 days, marketing dollars deployed in January will bear fruit as new customers in March. Comparing January spend to January closed deals distorts CAC during periods of rapid spend scaling or contraction.
         </p>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">What Is a Good CAC? Benchmarks by Industry</h2>
-        <div class="overflow-x-auto">
+        <h2 class="text-2xl font-semibold mb-3">LTV:CAC Ratio &amp; Healthy Unit Economics</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          Evaluating CAC in isolation is meaningless without comparing it to Customer Lifetime Value (LTV). A company spending $400 to acquire a customer with an LTV of $300 will quickly deplete its cash reserves. Conversely, a company spending $400 to acquire a customer who generates $2,400 in gross margin over their relationship has built an exceptionally profitable growth engine.
+        </p>
+        <div class="overflow-x-auto my-4">
           <table class="w-full text-sm border-collapse">
-            <thead><tr class="bg-[var(--color-bg-subtle)]">
-              <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Industry</th>
-              <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Typical CAC Range</th>
-            </tr></thead>
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">LTV:CAC Ratio</th>
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Economic Status</th>
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Strategic Recommendation</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td class="p-3 border border-[var(--color-border)]">SaaS (SMB)</td><td class="text-right p-3 border border-[var(--color-border)]">$100–$500</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">SaaS (Enterprise)</td><td class="text-right p-3 border border-[var(--color-border)]">$5,000–$50,000+</td></tr>
-              <tr><td class="p-3 border border-[var(--color-border)]">E-commerce</td><td class="text-right p-3 border border-[var(--color-border)]">$10–$100</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Financial Services</td><td class="text-right p-3 border border-[var(--color-border)]">$300–$1,200</td></tr>
-              <tr><td class="p-3 border border-[var(--color-border)]">Healthcare</td><td class="text-right p-3 border border-[var(--color-border)]">$250–$800</td></tr>
-              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Real Estate</td><td class="text-right p-3 border border-[var(--color-border)]">$600–$2,000</td></tr>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)] font-mono font-medium text-rose-600 dark:text-rose-400">&lt; 1.0x</td>
+                <td class="p-3 border border-[var(--color-border)]">Value Destructive</td>
+                <td class="p-3 border border-[var(--color-border)]">You lose cash on every deal. Immediately halt paid marketing and overhaul onboarding, pricing, or retention.</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)] font-mono font-medium text-amber-600 dark:text-amber-400">1.0x – 2.5x</td>
+                <td class="p-3 border border-[var(--color-border)]">Marginally Viable</td>
+                <td class="p-3 border border-[var(--color-border)]">Operating overhead and churn leave virtually zero net profit. Focus on improving customer retention and upselling.</td>
+              </tr>
+              <tr>
+                <td class="p-3 border border-[var(--color-border)] font-mono font-medium text-emerald-600 dark:text-emerald-400">3.0x – 4.0x</td>
+                <td class="p-3 border border-[var(--color-border)]">Target Sweet Spot</td>
+                <td class="p-3 border border-[var(--color-border)]">Healthy, sustainable growth. Cash flow can be aggressively reinvested into acquiring more market share.</td>
+              </tr>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <td class="p-3 border border-[var(--color-border)] font-mono font-medium text-blue-600 dark:text-blue-400">&gt; 5.0x</td>
+                <td class="p-3 border border-[var(--color-border)]">Underinvesting</td>
+                <td class="p-3 border border-[var(--color-border)]">You are leaving revenue on the table. You can afford to bid more aggressively on competitive search terms to scale faster.</td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: ProfitWell SaaS benchmarks; Shopify e-commerce data; industry-reported averages (2024). Updated August 2026. These are illustrative ranges — actual CAC depends on product price, sales motion, and market maturity.</p>
       </section>
 
       <section>
-        <h2 class="text-2xl font-semibold mb-3">Common CAC Mistakes</h2>
+        <h2 class="text-2xl font-semibold mb-3">Blended CAC vs Paid CAC: Why Both Matter</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          Growth marketers must distinguish between <strong>Blended CAC</strong> and <strong>Paid CAC</strong>:
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-[var(--color-text-muted)]">
+          <li><strong>Blended CAC:</strong> Divides all acquisition spend by <em>all</em> new customers, including those who arrived via word-of-mouth, direct navigation, brand PR, or organic search. While Blended CAC reflects your company's macro efficiency, it can create a dangerous illusion if organic growth masks failing paid ad channels.</li>
+          <li><strong>Paid CAC:</strong> Divides paid ad spend exclusively by customers attributed directly to paid campaigns. If your paid CAC is $450 on a product with a $350 LTV, scaling your ad budget will accelerate cash burn, even if your blended CAC looks acceptable due to viral organic loops.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Industry CAC Benchmarks (2024–2026)</h2>
+        <p class="text-[var(--color-text-muted)] leading-relaxed mb-3">
+          Customer acquisition costs vary widely across business models, competitive dynamics, and sales cycles. Typical median ranges include:
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-[var(--color-bg-subtle)]">
+                <th class="text-left p-3 border border-[var(--color-border)] font-semibold">Industry Vertical</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Typical CAC Range</th>
+                <th class="text-right p-3 border border-[var(--color-border)] font-semibold">Target Payback Period</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="p-3 border border-[var(--color-border)]">B2B SaaS (SMB)</td><td class="text-right p-3 border border-[var(--color-border)]">$150–$600</td><td class="text-right p-3 border border-[var(--color-border)]">&lt; 12 months</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">B2B SaaS (Enterprise)</td><td class="text-right p-3 border border-[var(--color-border)]">$5,000–$60,000+</td><td class="text-right p-3 border border-[var(--color-border)]">12–18 months</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Direct-to-Consumer (DTC) E-commerce</td><td class="text-right p-3 border border-[var(--color-border)]">$20–$110</td><td class="text-right p-3 border border-[var(--color-border)]">First purchase / &lt; 3 mo</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Financial Services &amp; FinTech</td><td class="text-right p-3 border border-[var(--color-border)]">$250–$1,400</td><td class="text-right p-3 border border-[var(--color-border)]">12–24 months</td></tr>
+              <tr><td class="p-3 border border-[var(--color-border)]">Healthcare &amp; MedTech</td><td class="text-right p-3 border border-[var(--color-border)]">$300–$900</td><td class="text-right p-3 border border-[var(--color-border)]">6–12 months</td></tr>
+              <tr class="bg-[var(--color-bg-subtle)]"><td class="p-3 border border-[var(--color-border)]">Commercial Real Estate</td><td class="text-right p-3 border border-[var(--color-border)]">$750–$2,500</td><td class="text-right p-3 border border-[var(--color-border)]">On transaction close</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[var(--color-text-subtle)] mt-2">Sources: ProfitWell SaaS benchmarks; Shopify E-commerce Metrics Report; FirstPageSage CAC index (2024). Updated August 2026.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-3">Actionable Strategies to Lower CAC</h2>
         <ul class="space-y-3 text-[var(--color-text-muted)]">
-          <li><strong>Counting returning customers.</strong> CAC measures the cost of acquiring <em>new</em> customers only. Including retention revenue inflates the denominator and understates your true acquisition cost.</li>
-          <li><strong>Excluding sales costs.</strong> Marketing-only CAC ignores sales salaries, commissions, and tools. Full CAC must include both sales and marketing spend.</li>
-          <li><strong>Using a single month of data.</strong> CAC has a lag — sales cycles, delayed conversions, and seasonal marketing spend all distort single-month figures. Use trailing 3–12 months.</li>
-          <li><strong>Ignoring LTV.</strong> A $500 CAC is terrible if LTV is $600, and excellent if LTV is $3,000. Never evaluate CAC in isolation.</li>
+          <li><strong>Optimize On-Page Conversion Rates (CRO):</strong> Doubling your landing page conversion rate from 2% to 4% immediately cuts your paid acquisition cost in half without altering ad bids.</li>
+          <li><strong>Tighten Ad Targeting &amp; Add Negative Keywords:</strong> Review Google Ads search terms reports weekly. Eliminating irrelevant non-converting search queries prevents budget drain.</li>
+          <li><strong>Shorten Sales Cycles:</strong> Lengthy sales pipelines inflate sales rep overhead. Streamline product demos, offer self-serve trials, and provide clear upfront pricing.</li>
+          <li><strong>Incentivize Customer Referrals:</strong> Referred customers convert up to 30% higher and carry near-zero acquisition costs, drastically reducing blended CAC across your portfolio.</li>
         </ul>
       </section>
 
@@ -242,44 +335,58 @@ const faqSchema = {
 
     const totalSpend = s + m;
     const cac = totalSpend / c;
-
     document.getElementById('result-cac').textContent = fmt(cac, curr);
     document.getElementById('result-total').textContent = fmt(totalSpend, curr);
-    document.getElementById('formula-display').textContent = `CAC = (${fmt(s,curr)} + ${fmt(m,curr)}) ÷ ${fmtN(c)} = ${fmt(cac, curr)}`;
+    document.getElementById('formula-display').textContent = `CAC = (${fmt(s, curr, 0)} + ${fmt(m, curr, 0)}) ÷ ${fmtN(c)} = ${fmt(cac, curr)}`;
 
-    const ratioRow = document.getElementById('ltv-ratio-row');
-    const assessRow = document.getElementById('ltv-assessment-row');
-    if (l !== null) {
+    const ltvRatioRow = document.getElementById('ltv-ratio-row');
+    const ltvAssessRow = document.getElementById('ltv-assessment-row');
+    const ltvAssessEl = document.getElementById('result-ltv-assessment');
+
+    if (l !== null && l > 0 && cac > 0) {
       const ratio = l / cac;
-      document.getElementById('result-ltv-ratio').textContent = fmtN(ratio, 2) + ':1';
-      let assessment = '';
-      if (ratio < 1) assessment = `⚠️ LTV:CAC below 1:1 — each customer costs more than they're worth. Reduce CAC or improve retention.`;
-      else if (ratio < 3) assessment = `⚠️ LTV:CAC is ${fmtN(ratio,2)}:1 — below the 3:1 benchmark. Focus on reducing CAC or increasing LTV.`;
-      else if (ratio <= 5) assessment = `✓ LTV:CAC is ${fmtN(ratio,2)}:1 — healthy. This is within the 3:1–5:1 target range.`;
-      else assessment = `⬆ LTV:CAC is ${fmtN(ratio,2)}:1 — excellent, but consider whether you're underinvesting in growth.`;
-      document.getElementById('result-ltv-assessment').textContent = assessment;
-      ratioRow.style.display = 'flex'; assessRow.classList.remove('hidden');
-    } else { ratioRow.style.display = 'none'; assessRow.classList.add('hidden'); }
+      document.getElementById('result-ltv-ratio').textContent = `${ratio.toFixed(2)}x`;
+      ltvRatioRow.classList.remove('hidden');
 
-    const p = new URLSearchParams();
-    if (salesEl.value) p.set('sales', salesEl.value);
-    if (mktEl.value) p.set('marketing', mktEl.value);
-    if (custEl.value) p.set('customers', custEl.value);
-    if (ltvEl.value) p.set('ltv', ltvEl.value);
-    p.set('currency', curr);
-    history.replaceState(null, '', '?' + p.toString());
+      let assess = '';
+      if (ratio < 1) assess = '⚠️ Unprofitable: LTV is less than CAC. You lose money on every acquired customer.';
+      else if (ratio < 3) assess = '⚠️ Caution: LTV:CAC is below the recommended 3:1 ratio. Operating margins may be compressed.';
+      else if (ratio <= 5) assess = '✅ Healthy: LTV:CAC is within the recommended 3:1–5:1 benchmark range.';
+      else assess = '🚀 High efficiency: LTV:CAC exceeds 5:1. You may have room to invest more aggressively in growth.';
+
+      ltvAssessEl.textContent = assess;
+      ltvAssessRow.classList.remove('hidden');
+    } else {
+      ltvRatioRow.classList.add('hidden');
+      ltvAssessRow.classList.add('hidden');
+    }
   }
 
-  [salesEl, mktEl, custEl, ltvEl, currEl].forEach(el => el.addEventListener('input', recalc));
-
-  document.getElementById('copy-result').addEventListener('click', function() {
-    const text = `CAC: ${document.getElementById('result-cac').textContent} | Total Spend: ${document.getElementById('result-total').textContent}`;
-    navigator.clipboard.writeText(text).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy Result'; }, 2000); });
-  });
-  document.getElementById('copy-link').addEventListener('click', function() {
-    navigator.clipboard.writeText(window.location.href).then(() => { this.textContent = 'Link copied!'; setTimeout(() => { this.textContent = 'Copy link to this calculation'; }, 2000); });
-  });
-
+  [salesEl, mktEl, custEl, ltvEl].forEach(el => el.addEventListener('input', recalc));
+  currEl.addEventListener('change', recalc);
   recalc();
+
+  document.getElementById('copy-result').addEventListener('click', () => {
+    const cac = document.getElementById('result-cac').textContent;
+    navigator.clipboard.writeText(`Customer Acquisition Cost: ${cac}`).then(() => {
+      const btn = document.getElementById('copy-result');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000);
+    });
+  });
+
+  document.getElementById('copy-link').addEventListener('click', () => {
+    const url = new URL(window.location.href);
+    if (salesEl.value) url.searchParams.set('sales', salesEl.value);
+    if (mktEl.value) url.searchParams.set('marketing', mktEl.value);
+    if (custEl.value) url.searchParams.set('customers', custEl.value);
+    if (ltvEl.value) url.searchParams.set('ltv', ltvEl.value);
+    url.searchParams.set('currency', currEl.value);
+    navigator.clipboard.writeText(url.toString()).then(() => {
+      const btn = document.getElementById('copy-link');
+      btn.textContent = 'Link Copied!';
+      setTimeout(() => { btn.textContent = 'Copy link to this calculation'; }, 2000);
+    });
+  });
 })();
 </script>

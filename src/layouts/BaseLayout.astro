@@ -7,9 +7,10 @@ export interface Props {
   canonical: string;
   ogImage?: string;
   schema?: object | object[];
+  robots?: string;
 }
 
-const { title, description, canonical, ogImage = 'https://realcpmcalculator.com/og-image.png', schema } = Astro.props;
+const { title, description, canonical, ogImage = 'https://realcpmcalculator.com/og-image.png', schema, robots = 'index, follow' } = Astro.props;
 const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 ---
 <!doctype html>
@@ -64,7 +65,7 @@ const schemaArray = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#2563eb" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content={robots} />
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0B7M9NN7WH"></script>

@@ -11,12 +11,30 @@ const pageUrl = 'https://realcpmcalculator.com/cpc-calculator';
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "CPC Calculator",
+  "name": "CPC Calculator – Cost Per Click & PPC Campaign Tool",
   "url": pageUrl,
   "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Paid Search & PPC Analytics",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "Calculate cost per click (CPC), ad spend, or click volume in any direction. Includes PPC industry benchmarks and conversion rate analysis.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "3-way solving: calculate CPC, total spend, or click volume",
+    "Conversion rate (CVR) and cost per conversion (CPA) extensions",
+    "Multi-currency support (USD, EUR, GBP, INR, AUD, CAD)",
+    "PPC industry benchmark comparisons",
+    "Client-side processing with zero server tracking"
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://realcpmcalculator.com" },
+    { "@type": "ListItem", "position": 2, "name": "CPC Calculator", "item": pageUrl }
+  ]
 };
 
 const faqs = [
@@ -30,7 +48,7 @@ const faqs = [
   },
   {
     q: "How do I find my CPC in Google Ads?",
-    a: "In Google Ads, open <strong>Campaigns</strong> → select your campaign or ad group → click the <strong>Columns</strong> icon and enable <strong>Avg. CPC</strong>. Google Ads calculates this automatically from your actual spend divided by actual clicks on that campaign."
+    a: "In Google Ads, open Campaigns → select your campaign or ad group → click the Columns icon and enable Avg. CPC. Google Ads calculates this automatically from your actual spend divided by actual clicks on that campaign."
   },
   {
     q: "What is a good CPC?",
@@ -50,6 +68,10 @@ const faqs = [
   {
     q: "What is a good CPC for a PPC campaign?",
     a: "A CPC is only 'good' relative to your conversion rate and the value of each conversion. If your product earns $200 per sale, a $5 CPC with a 4% conversion rate (CVR) means you pay $125 per sale — a strong result. If CVR drops to 1%, you're paying $500 per sale. Always evaluate CPC alongside conversion rate and cost per acquisition."
+  },
+  {
+    q: "How do you lower CPC in Google Ads and Meta Ads?",
+    a: "To lower CPC: 1) Improve Quality Score in Google Ads by increasing ad relevance, click-through rate, and landing page speed; 2) Add extensive negative keyword lists to prevent wasted bids on irrelevant search queries; 3) Target long-tail search keywords with lower commercial auction density; 4) Refresh ad creative and test multiple angles to boost organic CTR; and 5) Apply negative location or device bid modifiers to trim low-converting segments."
   }
 ];
 
@@ -64,10 +86,10 @@ const faqSchema = {
 };
 ---
 <BaseLayout
-  title="CPC Calculator – Cost Per Click, Solve Any Field"
-  description="Free CPC calculator — enter any two of spend, clicks, or CPC and instantly solve the third. Includes a PPC budget estimator for clicks from a fixed budget."
+  title="CPC Calculator – Free Cost Per Click Calculator"
+  description="Free online CPC calculator. Calculate cost per click, total ad spend, or expected clicks in any direction with reverse formulas and PPC benchmarks."
   canonical={pageUrl}
-  schema={[webAppSchema, faqSchema]}
+  schema={[webAppSchema, breadcrumbSchema, faqSchema]}
 >
   <SiteHeader current="/cpc-calculator" />
 
